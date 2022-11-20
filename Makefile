@@ -16,7 +16,7 @@ TEST_CLIENT:
 	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o
 	cd ./tests; gcc -c check_http.c
 	gcc ./build/http.o ./tests/check_http.o -lcurl -lcheck -lsubunit -lpthread -lm -lrt -o ./tests/check_http
-	./check_http
+	cd ./tests; ./check_http
 
 CLEAN_TEST_CLIENT:
 	rm -rf ./build
