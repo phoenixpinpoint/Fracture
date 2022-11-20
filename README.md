@@ -13,6 +13,10 @@ libcheck (Unit Testing)
 ## Building
 
 ## Development
+### Required Packages
+- libcheck
+- libcurl
+
 ### Client Tests
 From the root directory 
 ```
