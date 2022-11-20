@@ -16,3 +16,6 @@
 
 // Client Library
 #include "client/client.c"
+
+// Utils Module
+#include "utils/utils.c"
