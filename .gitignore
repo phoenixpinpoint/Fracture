@@ -1,0 +1,6 @@
+# Builds
+/build
+/tests/build
+
+# Compiled Libraries
+*.o
