@@ -92,10 +92,10 @@ START_TEST (test_create_response)
     //Test the values
     res.body = "{}";
     res.response_code = 200;
-    res.header = "";
+    res.headers = "";
     ck_assert_str_eq(res.body, "{}");
     ck_assert_int_eq(res.response_code, 200);
-    ck_assert_str_eq(res.header, "");
+    ck_assert_str_eq(res.headers, "");
 }
 END_TEST
 
