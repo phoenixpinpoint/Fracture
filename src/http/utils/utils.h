@@ -16,5 +16,6 @@
 #define UTILS_H
 
 #include "request.h"
+#include "response.h"
 
 #endif

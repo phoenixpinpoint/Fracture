@@ -81,6 +81,25 @@ START_TEST (test_create_request)
 END_TEST
 
 /**
+ * @brief Construct a new start test object
+ * test_create_response test the creation of a response struct
+ */
+START_TEST (test_create_response)
+{
+    printf("HTTP Client: RESPONSE creation\n");
+    //Create a RESPONSE
+    RESPONSE res; 
+    //Test the values
+    res.body = "{}";
+    res.response_code = 200;
+    res.header = "";
+    ck_assert_str_eq(res.body, "{}");
+    ck_assert_int_eq(res.response_code, 200);
+    ck_assert_str_eq(res.header, "");
+}
+END_TEST
+
+/**
  * @brief build a http_suite Suite struct
  * 
  * @return Suite* 
@@ -100,6 +119,7 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_init);
     tcase_add_test(tc_client, test_cleanup);
     tcase_add_test(tc_client, test_create_request);
+    tcase_add_test(tc_client, test_create_response);
     suite_add_tcase(s, tc_client);
 
     return s;
