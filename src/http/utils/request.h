@@ -18,6 +18,17 @@
  * Request stores representational and acutal data that will be submitted to the cURL
  * lib call.
  */
-typedef struct REQUEST RQUEST;
+//typedef struct REQUEST REQUEST;
+
+/**
+ * @brief REQUEST
+ * Request stores representational and acutal data that will be submitted to the cURL
+ * lib call.
+ */
+typedef struct REQUEST {
+    char* url;      // URL of the endpoint
+    char* body;     // Raw body as char array TODO: build JSON body
+    char* header;  // String representation of header.
+} REQUEST;
 
 #endif

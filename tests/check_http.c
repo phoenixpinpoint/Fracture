@@ -62,6 +62,25 @@ START_TEST (test_cleanup)
 END_TEST
 
 /**
+ * @brief Construct a new start test object
+ * test_create_request test the creation of a reuqest struct
+ */
+START_TEST (test_create_request)
+{
+    printf("HTTP Client: REQUEST creation\n");
+    //Create a REQUEST
+    REQUEST r;
+    //Set the url, body, and header
+    r.url = "https://test.com";
+    r.body = "{'test' : 'hello,world'}";
+    r.header = "";
+    ck_assert_str_eq(r.url, "https://test.com");
+    ck_assert_str_eq(r.body, "{'test' : 'hello,world'}");
+    ck_assert_str_eq(r.header, "");
+}
+END_TEST
+
+/**
  * @brief build a http_suite Suite struct
  * 
  * @return Suite* 
@@ -80,6 +99,7 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_valid);
     tcase_add_test(tc_client, test_init);
     tcase_add_test(tc_client, test_cleanup);
+    tcase_add_test(tc_client, test_create_request);
     suite_add_tcase(s, tc_client);
 
     return s;

@@ -2,5 +2,5 @@
 ./build
 ./tests/build
 
-# Compiled Libraryes
+# Compiled Libraries
 *.o
