@@ -42,7 +42,7 @@ endif
 ### HTTP Client
 # Client Testing
 ###
-TEST_CLIENT:
+TEST:
 	mkdir build
 	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o
 	mkdir ./tests/build
@@ -50,6 +50,6 @@ TEST_CLIENT:
 	gcc ./build/http.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
 	cd ./tests/build; ./check_http
 
-CLEAN_TEST_CLIENT:
+CLEAN_TEST:
 	rm -rf ./build
 	rm -rf ./tests/build

@@ -20,12 +20,12 @@ libcheck (Unit Testing)
 ### Client Tests
 From the root directory 
 ```
-make TEST_CLIENT
+make TEST
 ```
 
 To clean up
 ```
-make CLEAN_TEST_CLIENT
+make CLEAN_TEST
 ```
 
 ## Contributing
