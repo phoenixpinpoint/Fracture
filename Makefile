@@ -44,10 +44,10 @@ endif
 ###
 TEST:
 	mkdir build
-	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o
+	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o;
 	mkdir ./tests/build
 	cd ./tests/build; gcc -c ../check_http.c
-	gcc ./build/http.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
+	gcc ./build/http.o ./build/headers.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
 	cd ./tests/build; ./check_http
 
 CLEAN_TEST:

@@ -26,8 +26,11 @@ START_TEST (test_valid)
 {
     printf("HTTP Client: valid\n");
     //Assert that curl is not null
+    printf("...Calling HTTP_CLIENT_VALID\n");
     bool curlCheck = HTTP_CLIENT_VALID();
+    printf("...Should Be False\n");
     ck_assert_int_eq(curlCheck, 0);
+    printf("------------------------------\n");
 }
 END_TEST
 
@@ -39,10 +42,14 @@ START_TEST (test_init)
 {
     printf("HTTP Client: init\n");
     //Init the library
+    printf("...Calling HTTP_CLIENT_INIT\n");
     HTTP_CLIENT_INIT();
     //Assert that curl is not null
+    printf("...Calling HTTP_CLIENT_VALID\n");
     bool curlCheck = HTTP_CLIENT_VALID();
+
     ck_assert_int_eq(curlCheck, 1);
+    printf("------------------------------\n");
 }
 END_TEST
 
@@ -57,7 +64,9 @@ START_TEST (test_cleanup)
     HTTP_CLIENT_CLEANUP();
     //Assert that curl is not null
     bool curlCheck = HTTP_CLIENT_VALID();
+    printf("...Checking HTTP_CLIENT_VALID returned false.");
     ck_assert_int_eq(curlCheck, 0);
+    printf("------------------------------\n");
 }
 END_TEST
 
@@ -77,6 +86,7 @@ START_TEST (test_create_request)
     ck_assert_str_eq(r.url, "https://test.com");
     ck_assert_str_eq(r.body, "{'test' : 'hello,world'}");
     ck_assert_str_eq(r.header, "");
+    printf("------------------------------\n");
 }
 END_TEST
 
@@ -96,8 +106,61 @@ START_TEST (test_create_response)
     ck_assert_str_eq(res.body, "{}");
     ck_assert_int_eq(res.response_code, 200);
     ck_assert_str_eq(res.headers, "");
+    printf("------------------------------\n");
 }
 END_TEST
+
+START_TEST(test_headers)
+{
+    printf("HTTP Client: HEADER and HEADERS\n");
+    printf("...Setting up HEADER h1\n");
+    HEADER h1;
+    h1.key = "location";
+    h1.value = "https://www.example.com";
+    printf("...Setting up Inital Values of HEADERS headers\n");
+    HEADERS headers;
+    headers.length = 0;
+    headers.headers = NULL;
+    printf("...Calling ADD_HEADER\n");
+    headers = ADD_HEADER(headers, h1);
+    printf("...Checking headers length is 1\n\0");
+    ck_assert_int_eq(headers.length, 1);
+    printf("...Checking headers[0] value and h1 value are equal\n\0");
+    ck_assert_str_eq(headers.headers[0]->value, h1.value);
+    printf("...Checking GET_HEADER_BY_INDEX value and h1 value are equal\n");
+    ck_assert_str_eq(GET_HEADER_BY_INDEX(headers, 0)->value, h1.value);
+    printf("...Setting up HEADER h2\n");
+    HEADER h2;
+    h2.key = "user";
+    h2.value = "TestATest";
+    printf("...Calling ADD_HEADER\n");
+    headers = ADD_HEADER(headers, h2);
+    printf("...Checking headers length is 2\n\0");
+    ck_assert_int_eq(headers.length, 2);
+    printf("...Checking headers[1] value and h2 value are equal\n\0");
+    ck_assert_str_eq(headers.headers[1]->value, h2.value);
+    printf("...Checking GET_HEADER_BY_INDEX value and h2 value are equal\n");
+    ck_assert_str_eq(GET_HEADER_BY_INDEX(headers, 1)->value, h2.value);
+        printf("...Checking GET_HEADER_BY_KEY value and h1 value equal\n");
+    ck_assert_str_eq(GET_HEADER_BY_KEY(headers, "location")->value, h1.value);
+    printf("...Checking GET_HEADER_BY_KEY value and h2 value equal\n");
+    ck_assert_str_eq(GET_HEADER_BY_KEY(headers, "user")->value, h2.value);
+    printf("------------------------------\n");
+}
+END_TEST
+
+START_TEST (test_get_google)
+{
+    printf("HTTP Client: GET https://www.google.com\n");
+    HTTP_CLIENT_INIT();
+    REQUEST req;
+    req.url = "https://google.com";
+    RESPONSE res;
+    res = GET(req);
+    ck_assert_int_eq(res.response_code,200);
+    HTTP_CLIENT_CLEANUP();
+    printf("------------------------------\n");
+}
 
 /**
  * @brief build a http_suite Suite struct
@@ -120,6 +183,8 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_cleanup);
     tcase_add_test(tc_client, test_create_request);
     tcase_add_test(tc_client, test_create_response);
+    tcase_add_test(tc_client, test_headers);
+    tcase_add_test(tc_client, test_get_google);
     suite_add_tcase(s, tc_client);
 
     return s;

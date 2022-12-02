@@ -17,5 +17,6 @@
 
 #include "request.h"
 #include "response.h"
+#include "headers.h"
 
 #endif
