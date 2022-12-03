@@ -14,7 +14,7 @@
 #define RESPONSE_H
 
 typedef struct RESPONSE {
-    int response_code;  // Response Code
+    long response_code;  // Response Code
     char* body;         // Raw body as char array TODO: build JSON body
     char* headers;       // String representation of header.
 } RESPONSE;

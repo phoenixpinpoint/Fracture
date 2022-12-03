@@ -15,6 +15,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include "../utils/utils.h"
+
 /**
  * @brief HTTP_CLIENT_INIT()
  * HTTP_CLIENT_INIT() setups the cURL globally. With cURL defaults.
@@ -32,5 +34,18 @@ void HTTP_CLIENT_CLEANUP();
  * HTTP_valid returns true or false if curl is set. 
  */
 bool HTTP_CLIENT_VALID();
+
+/**
+ * @brief HTTP_ALLOW_REDIRECTS 
+ * HTTP_ALLOW_REDIRECTS is a function to enable/disable redirection.
+ */
+void HTTP_ALLOW_REDIRECTS(bool);
+
+/**
+ * @brief GET
+ * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
+ * @return RESPONSE 
+ */
+RESPONSE GET(REQUEST);
 
 #endif
