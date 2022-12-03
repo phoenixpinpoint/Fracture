@@ -26,17 +26,63 @@ CURL *curl;
 
 bool ALLOW_REDIRECTS = true;
 
+
+/**
+ * @brief header_callback
+ * 
+ *  header_callback is the callback function for the libcurl HEADERFUNCTION option. 
+ * 
+ * @param buffer - CHAR* Raw header string.
+ * @param size - The size of the items.
+ * @param nitems - The number of the items.
+ * @param userdata - By default this is a void*, in this library userdata is
+ * a pointer to a HEADERS* struct.
+ * @return size_t 
+ */
 static size_t header_callback(char *buffer, size_t size,size_t nitems, void *userdata)
 {
-  /* received header is nitems * size long in 'buffer' NOT ZERO TERMINATED */
-  /* 'userdata' is set with CURLOPT_HEADERDATA */
-  printf("Buffer: %s**\n", buffer);
-  printf("size: %d\n", size);
-  printf("nitems: %d\n", nitems);
-  //printf("Userdata: %s\n", userdata);
-  size_t numbytes = size * nitems;
-  //printf("%.*s\n", numbytes, buffer);
-  printf("numbytes: %d\n", numbytes);
+  /*
+   * Generally this function copies the buffer into bufferCopy in order to
+   * perserve the original raw data to be attached to the HEADER struct.
+   * 
+   * Then use strtok to break the raw header into key value pairs if 
+   * the header is valid.
+   * 
+   * As noted below strtok appears to return the original string if there is 
+   * no match. I am currently investigating this in order to ensure what
+   * I am expiriencing is not undefined behavour. Regardless since it returns
+   * the original buffer if no match, we check the return value (key) against
+   * the original buffer to see if a match was found as a match would be 
+   * shorter the the buffer.
+   * 
+   * If match is found we call strtok again to get the remainder of the
+   * buffer which becomes the value. Since the value has a prepended space
+   * we remove that space. 
+   */
+
+  //Copy the buffer into a copy. 
+  char* bufferCopy = (char*)calloc(nitems, sizeof(char));
+  strncpy(bufferCopy, buffer, nitems);
+
+  //Split the header string on the first ":".
+  char* key = strtok(buffer, ":");
+
+  //I was under the impression that strtok returns NULL without a match
+  //It appears to return the buffer instead....therefore we are doing a 
+  //basic strncmp.
+
+  //Compare the original buffer and the key
+  //If the key is less than the bufferCopy a match is found. 
+  if (strncmp(key, bufferCopy, nitems) <  0)
+  {
+    //Call strtok again with no string to match for. This returns the
+    //Remaining string in the buffer.
+    char* value = strtok(NULL, "");
+
+    //If the first value is a space, remove it.
+    if (value[0] == ' ') value++;
+
+  }
   return nitems * size;
 }
 
@@ -95,10 +141,15 @@ RESPONSE GET(REQUEST req)
   RESPONSE res;
   if(curl)
   {
-    curl_easy_setopt(curl, CURLOPT_URL, req.url);
-    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);
-    CURLcode curl_res;
-    curl_res = curl_easy_perform(curl);
+    //Setup cURL
+    curl_easy_setopt(curl, CURLOPT_URL, req.url); //Set the URL
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);//Set the HEADERFUNCTION
+    CURLcode curl_res;//Create a response object.
+
+    
+    curl_res = curl_easy_perform(curl);//Execute the cURL call.
+    
+    
     if(curl_res != CURLE_OK)
     {
       fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_res));
