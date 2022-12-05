@@ -86,6 +86,8 @@ static size_t header_callback(char *buffer, size_t size,size_t nitems, void *use
     userdata = ADD_NEW_HEADER_PTR(userdata, key, value);
   }
 
+  free(bufferCopy);
+
   return nitems * size;
 }
 

@@ -16,6 +16,7 @@
 #define CLIENT_H
 
 #include "../utils/utils.h"
+#include <stdbool.h>
 
 /**
  * @brief HTTP_CLIENT_INIT()
