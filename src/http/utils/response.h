@@ -13,10 +13,12 @@
 #ifndef RESPONSE_H
 #define RESPONSE_H
 
+#include "./headers.h"
+
 typedef struct RESPONSE {
     long response_code;  // Response Code
     char* body;         // Raw body as char array TODO: build JSON body
-    char* headers;       // String representation of header.
+    HEADERS* headers;   // Pointer to a HEADER.
 } RESPONSE;
 
 #endif

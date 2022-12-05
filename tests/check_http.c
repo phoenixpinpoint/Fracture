@@ -103,10 +103,10 @@ START_TEST (test_create_response)
     //Test the values
     res.body = "{}";
     res.response_code = 200;
-    res.headers = "";
+    //res.headersStr = "";
     ck_assert_str_eq(res.body, "{}");
     ck_assert_int_eq(res.response_code, 200);
-    ck_assert_str_eq(res.headers, "");
+    //ck_assert_str_eq(res.headersStr, "");
     printf("------------------------------\n");
 }
 END_TEST
@@ -162,15 +162,26 @@ START_TEST(test_headers)
 }
 END_TEST
 
-START_TEST (test_get_google)
+START_TEST (test_get_google_wo_redirect)
 {
-    printf("HTTP Client: GET https://www.google.com\n");
+    printf("HTTP Client: GET https://google.com w/o REDIRECT\n");
+    printf("...Calling HTTP_CLIENT_INIT\n");
     HTTP_CLIENT_INIT();
+    
+    printf("...Setting up request to https://google.com\n");
     REQUEST req;
     req.url = "https://google.com";
+    
+    printf("...Setting up response\n");
     RESPONSE res;
+    
+    printf("...Calling GET\n");
     res = GET(req);
-    ck_assert_int_eq(res.response_code,200);
+    
+    printf("...Checking Response Code\n");
+    ck_assert_int_eq(res.response_code,301);
+
+    printf("...Calling CLEANUP\n");
     HTTP_CLIENT_CLEANUP();
     printf("------------------------------\n");
 }
@@ -197,7 +208,7 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_create_request);
     tcase_add_test(tc_client, test_create_response);
     tcase_add_test(tc_client, test_headers);
-    tcase_add_test(tc_client, test_get_google);
+    tcase_add_test(tc_client, test_get_google_wo_redirect);
     suite_add_tcase(s, tc_client);
 
     return s;

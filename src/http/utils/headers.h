@@ -50,6 +50,25 @@ typedef struct HEADERS {
 HEADERS ADD_HEADER(HEADERS, HEADER);
 
 /**
+ * @brief ADD_HEADERS_PTR
+ * ADD_HEADERS_PTR takes a HEADERS pointer list and a HEADER and adds the HEADER to HEADERS. 
+ * If there isn't any current headers it allocates memory for the user. 
+ * IF there is it reallocates and adds the header.
+ * @return HEADERS* 
+ */
+HEADERS* ADD_HEADER_PTR(HEADERS*, HEADER);
+
+/**
+ * @brief ADD_HEADER_PTR
+ * ADD_NEW_HEADER_PTR takes a HEADERS pointer list two char poitners for the 
+ * key and the value, adding them to HEADERS. 
+ * If there isn't any current headers it allocates memory for the user. 
+ * IF there is it reallocates and adds the header.
+ * @return HEADERS* 
+ */
+HEADERS* ADD_NEW_HEADER_PTR(HEADERS*, char*, char*);
+
+/**
  * @brief GET_HEADER_BY_INDEX
  * Return the Pointer at a given index in the HEADERS structure.
  * @return HEADER* 

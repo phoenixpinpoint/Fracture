@@ -15,7 +15,7 @@
 
 /**
  * @brief ADD_HEADERS
- *  * ADD_HEADERS takes a HEADERS list and a HEADER and adds the HEADER to HEADERS. 
+ * ADD_HEADERS takes a HEADERS list and a HEADER and adds the HEADER to HEADERS. 
  * If there isn't any current headers it allocates memory for the user. 
  * IF there is it reallocates and adds the header.
  * @param list 
@@ -55,6 +55,107 @@ HEADERS ADD_HEADER(HEADERS list, HEADER header)
         list.headers = realloc(list.headers, list.length*sizeof(header));
         //Set the next available index to h.
         list.headers[next_index] = h;
+        return list;//Return
+    }
+}
+
+/**
+ * @brief ADD_HEADERS
+ * ADD_HEADERS_PTR takes a HEADERS pointer list and a HEADER and adds the HEADER to HEADERS. 
+ * If there isn't any current headers it allocates memory for the user. 
+ * IF there is it reallocates and adds the header.
+ * @param list 
+ * @param header 
+ * @return HEADERS* 
+ */
+HEADERS* ADD_HEADER_PTR(HEADERS* list, HEADER header)
+{
+    //Store the lenght for ease of use later.
+    int length = list->length;
+    //Handle a new list
+    if (length < 1)
+    {
+        //Allocate a pointer for header
+        HEADER* h = calloc(1, sizeof(HEADER));
+        //Set the Values
+        h->key = header.key;
+        h->value = header.value;
+        //Set the list values for HEADERS
+        list->length = 1;//Set the length to 1
+        //Allocate the poitner to pointer.
+        list->headers = calloc(1, sizeof(HEADER*));
+        list->headers[0] = h;//Set the first pointer to h
+        return list;//Return
+    }
+    else //Handle add to existing list
+    {
+        //Allocate a pointer for header
+        HEADER* h = calloc(1, sizeof(HEADER));
+        //Set the Values
+        h->key = header.key;
+        h->value = header.value;
+        //Store the lenght as next index
+        int next_index = list->length; //Set the next index to the end of the list.
+        list->length++;//Increment the list.
+        //Reallocate the headers pointer to pointer to the new size
+        list->headers = realloc(list->headers, list->length*sizeof(header));
+        //Set the next available index to h.
+        list->headers[next_index] = h;
+        return list;//Return
+    }
+}
+
+/**
+ * @brief ADD_HEADER_PTR
+ * ADD_NEW_HEADER_PTR takes a HEADERS pointer list two char poitners for the 
+ * key and the value, adding them to HEADERS. 
+ * If there isn't any current headers it allocates memory for the user. 
+ * IF there is it reallocates and adds the header.
+ * 
+ * @param list 
+ * @param key 
+ * @param value 
+ * @return HEADERS* 
+ */
+HEADERS* ADD_NEW_HEADER_PTR(HEADERS* list, char* key, char* value)
+{
+    //Store the lenght for ease of use later.
+    int length = list->length;
+    size_t keyLength = strlen(key);
+    size_t valueLength = strlen(value);
+    //Handle a new list
+    if (length < 1)
+    {
+        //Allocate a pointer for header
+        HEADER* h = calloc(1, sizeof(HEADER));
+        //Set the Values
+        h->key = calloc(keyLength, sizeof(char));
+        strncpy(h->key, key, keyLength);
+        h->value = calloc(valueLength, sizeof(char));
+        strncpy(h->value, value, valueLength);
+        //Set the list values for HEADERS
+        list->length = 1;//Set the length to 1
+        //Allocate the poitner to pointer.
+        list->headers = calloc(1, sizeof(HEADER*));
+        list->headers[0] = h;//Set the first pointer to h
+        return list;//Return
+    }
+    else //Handle add to existing list
+    {
+        //Allocate a pointer for header
+        HEADER* h = calloc(1, sizeof(HEADER));
+        //Set the Values
+        h->key = calloc(keyLength, sizeof(char));
+        strncpy(h->key, key, keyLength);
+        h->value = calloc(valueLength, sizeof(char));
+        strncpy(h->value, value, valueLength);
+        //Store the length as next index
+        int next_index = list->length; //Set the next index to the end of the list.
+        list->length++;//Increment the list.
+        //Reallocate the headers pointer to pointer to the new size
+        list->headers = realloc(list->headers, list->length*sizeof(HEADER));
+        //Set the next available index to h.
+        list->headers[next_index] = h;
         return list;//Return
     }
 }

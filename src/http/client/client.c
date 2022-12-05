@@ -42,7 +42,7 @@ bool ALLOW_REDIRECTS = true;
 static size_t header_callback(char *buffer, size_t size,size_t nitems, void *userdata)
 {
   /*
-   * Generally this function copies the buffer into bufferCopy in order to
+   * Generally, this function copies the buffer into bufferCopy in order to
    * perserve the original raw data to be attached to the HEADER struct.
    * 
    * Then use strtok to break the raw header into key value pairs if 
@@ -82,7 +82,10 @@ static size_t header_callback(char *buffer, size_t size,size_t nitems, void *use
     //If the first value is a space, remove it.
     if (value[0] == ' ') value++;
 
+    //Add the header
+    userdata = ADD_NEW_HEADER_PTR(userdata, key, value);
   }
+
   return nitems * size;
 }
 
@@ -138,11 +141,20 @@ void HTTP_ALLOW_REDIRECTS(bool value)
  */
 RESPONSE GET(REQUEST req)
 {
+  //Create A Response Object
   RESPONSE res;
+
+  //Allocate and initialize the Headers Struct
+  res.headers = calloc(1, sizeof(HEADERS));
+  res.headers->length = 0;
+  res.headers->headers = NULL;
+
+  //If curl is valid
   if(curl)
   {
     //Setup cURL
     curl_easy_setopt(curl, CURLOPT_URL, req.url); //Set the URL
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, res.headers);//Set the Header Struct.
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);//Set the HEADERFUNCTION
     CURLcode curl_res;//Create a response object.
 
