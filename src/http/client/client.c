@@ -39,7 +39,7 @@ bool ALLOW_REDIRECTS = true;
  * a pointer to a HEADERS* struct.
  * @return size_t 
  */
-static size_t header_callback(char *buffer, size_t size,size_t nitems, void *userdata)
+static size_t headerCallback(char *buffer, size_t size,size_t nitems, void *userdata)
 {
   /*
    * Generally, this function copies the buffer into bufferCopy in order to
@@ -88,6 +88,15 @@ static size_t header_callback(char *buffer, size_t size,size_t nitems, void *use
 
   free(bufferCopy);
 
+  return nitems * size;
+}
+
+static size_t bodyCallback(void *data, size_t size, size_t nitems, void *userdata)
+{
+  printf("DATA: %s\n",data);
+  userdata = calloc(strlen(data), sizeof(char));
+  strncpy(userdata, data, strlen(data));
+  printf("USER-DATA: %s\n", userdata);
   return nitems * size;
 }
 
@@ -157,7 +166,9 @@ RESPONSE GET(REQUEST req)
     //Setup cURL
     curl_easy_setopt(curl, CURLOPT_URL, req.url); //Set the URL
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, res.headers);//Set the Header Struct.
-    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);//Set the HEADERFUNCTION
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headerCallback);//Set the HEADERFUNCTION
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, res.body);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, bodyCallback);
     CURLcode curl_res;//Create a response object.
 
     
@@ -173,6 +184,7 @@ RESPONSE GET(REQUEST req)
       long response_code;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
       res.response_code = response_code;
+      printf("EXIT BODY: %s\n", res.body);
     }
     return res;
   }

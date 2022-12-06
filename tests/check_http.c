@@ -181,6 +181,8 @@ START_TEST (test_get_google_wo_redirect)
     printf("...Checking Response Code\n");
     ck_assert_int_eq(res.response_code,301);
 
+    printf("BODY: %s\n", req.body);
+
     printf("...Calling CLEANUP\n");
     HTTP_CLIENT_CLEANUP();
     printf("------------------------------\n");
