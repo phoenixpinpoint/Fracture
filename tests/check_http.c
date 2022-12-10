@@ -238,6 +238,7 @@ START_TEST (test_get_max_redirect)
     printf("...Calling get max redirect\n");
     int max = HTTP_GET_MAX_REDIRECTS();
     ck_assert_int_eq(max, 100);
+    printf("------------------------------\n");
 }
 
 /**
@@ -256,6 +257,7 @@ START_TEST (test_set_max_redirect)
 
     printf("...Calling set max redirect to reset.\n");
     HTTP_SET_MAX_REDIRECTS(100);
+    printf("------------------------------\n");
 }
 
 /**
