@@ -137,6 +137,7 @@ HEADERS* ADD_NEW_HEADER_PTR(HEADERS* list, char* key, char* value)
         list->length = 1;//Set the length to 1
         //Allocate the poitner to pointer.
         list->headers = calloc(1, sizeof(HEADER*));
+        ((char *) h->value)[strcspn(h->value,"\n")] = 0;
         list->headers[0] = h;//Set the first pointer to h
         return list;//Return
     }
@@ -155,6 +156,7 @@ HEADERS* ADD_NEW_HEADER_PTR(HEADERS* list, char* key, char* value)
         //Reallocate the headers pointer to pointer to the new size
         list->headers = realloc(list->headers, list->length*sizeof(HEADER));
         //Set the next available index to h.
+        ((char *) h->value)[strcspn(h->value,"\n")] = 0;
         list->headers[next_index] = h;
         return list;//Return
     }

@@ -192,6 +192,7 @@ RESPONSE GET(REQUEST req)
     if(curl_res != CURLE_OK)
     {
       fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(curl_res));
+      return res;
     }
     else
     {
@@ -199,7 +200,28 @@ RESPONSE GET(REQUEST req)
       long response_code;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
       res.response_code = response_code;
+      //IF we get a moved HTTP code and redirects are enabled.
+      if(response_code == 301 && ALLOW_REDIRECTS == true)
+      {
+        //Get the location header from the Response
+        void* redirectUrlValue = GET_HEADER_BY_KEY_PTR(res.headers, "location")->value;
+        
+        //Allocate a string and store the cast of the value
+        char* redirectUrl = (char*)calloc(strlen((char*) redirectUrlValue), sizeof(char));
+        strncpy(redirectUrl, (char*)redirectUrlValue, strlen((char*) redirectUrlValue));
+        
+        //Remove the last new line
+        if(redirectUrl[strlen(redirectUrl)-1] == '\r')
+        {
+          redirectUrl[strlen(redirectUrl)-1] = '\0';
+        }
+        
+        //Set the redirect URL
+        req.url = redirectUrl;
 
+        //Call GET again with the new request.
+        return res = GET(req);
+      }
       //Set the body
       /*
       * Allocate the body to the final size of the bodyTextGlobalVar and then copy it.
@@ -210,7 +232,6 @@ RESPONSE GET(REQUEST req)
       free(bodyTextGobalVar);
       bodyInit = 0;
     }
-    
     //Return Response.
     return res;
   }

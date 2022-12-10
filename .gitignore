@@ -4,3 +4,6 @@
 
 # Compiled Libraries
 *.o
+
+# vscode
+.vscode
