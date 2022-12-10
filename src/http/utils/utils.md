@@ -23,3 +23,6 @@ printf("%d\n", res.status_code);
 printf("%s\n", res.body);
 printf("%s\n", res.headers);
 ```
+
+## Headers
+HEADERS is the struct based datatype for handling HTTP headers. Headers consist of a length counter and a HEADER** headers list. This is a list of HEADER types. HEADER is a type that has a key value pair. The key is always a string and the value is a void pinter that can be cast to the actual type.
