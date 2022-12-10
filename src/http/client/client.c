@@ -26,6 +26,8 @@ CURL *curl;
 
 bool ALLOW_REDIRECTS = true;
 
+int bodyInit = 0;
+char* bodyTextGobalVar;
 
 /**
  * @brief header_callback
@@ -39,7 +41,7 @@ bool ALLOW_REDIRECTS = true;
  * a pointer to a HEADERS* struct.
  * @return size_t 
  */
-static size_t headerCallback(char *buffer, size_t size,size_t nitems, void *userdata)
+static size_t headerCallback(char *buffer, size_t size, size_t nitems, void *userdata)
 {
   /*
    * Generally, this function copies the buffer into bufferCopy in order to
@@ -91,12 +93,27 @@ static size_t headerCallback(char *buffer, size_t size,size_t nitems, void *user
   return nitems * size;
 }
 
-static size_t bodyCallback(void *data, size_t size, size_t nitems, void *userdata)
+static size_t bodyCallback(char *data, size_t size, size_t nitems, void *userdata)
 {
-  printf("DATA: %s\n",data);
-  userdata = calloc(strlen(data), sizeof(char));
-  strncpy(userdata, data, strlen(data));
-  printf("USER-DATA: %s\n", userdata);
+  /**
+   * Generally this function is called 1-X number of times. On the initial call it
+   * allocates the bodyTextGlobalVar and copies the buffer to the global variable. It 
+   * then sets the bodyInit flag to 1 which means the next call will reallocate the
+   * string and concatenate the string with the new buffer data.
+   */
+  if(bodyInit == 0)
+  {
+    bodyTextGobalVar = (char*)calloc(nitems, sizeof(char));
+    strncpy(bodyTextGobalVar, data, nitems);
+    bodyInit = 1;
+  }
+  else
+  {
+    size_t oldBodySize = strlen(bodyTextGobalVar);
+    bodyTextGobalVar = realloc(bodyTextGobalVar, oldBodySize+nitems);
+    strncat(bodyTextGobalVar, data, nitems);
+  }
+  
   return nitems * size;
 }
 
@@ -167,13 +184,10 @@ RESPONSE GET(REQUEST req)
     curl_easy_setopt(curl, CURLOPT_URL, req.url); //Set the URL
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, res.headers);//Set the Header Struct.
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headerCallback);//Set the HEADERFUNCTION
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, res.body);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, bodyCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, bodyCallback);//Set our WRITEFUNCTION
     CURLcode curl_res;//Create a response object.
 
-    
     curl_res = curl_easy_perform(curl);//Execute the cURL call.
-    
     
     if(curl_res != CURLE_OK)
     {
@@ -181,11 +195,23 @@ RESPONSE GET(REQUEST req)
     }
     else
     {
+      //Setup response code handling.
       long response_code;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
       res.response_code = response_code;
-      printf("EXIT BODY: %s\n", res.body);
+
+      //Set the body
+      /*
+      * Allocate the body to the final size of the bodyTextGlobalVar and then copy it.
+      * Free bodyTextGlobalVar to and set bodyInit flag to 0 for the next calls.
+      */
+      res.body = calloc(strlen(bodyTextGobalVar), sizeof(char));
+      strncpy(res.body, bodyTextGobalVar, strlen(bodyTextGobalVar));
+      free(bodyTextGobalVar);
+      bodyInit = 0;
     }
+    
+    //Return Response.
     return res;
   }
   else

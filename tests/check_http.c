@@ -178,10 +178,8 @@ START_TEST (test_get_google_wo_redirect)
     printf("...Calling GET\n");
     res = GET(req);
     
-    printf("...Checking Response Code\n");
-    ck_assert_int_eq(res.response_code,301);
-
-    printf("BODY: %s\n", req.body);
+    printf("...Checking Response Code For 301\n");
+    ck_assert_int_eq(res.response_code, 301);
 
     printf("...Calling CLEANUP\n");
     HTTP_CLIENT_CLEANUP();
