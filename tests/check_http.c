@@ -174,12 +174,42 @@ START_TEST (test_get_google_wo_redirect)
     
     printf("...Setting up response\n");
     RESPONSE res;
+
+    printf("...Setting Redirect to false\n");
+    HTTP_ALLOW_REDIRECTS(false);
     
     printf("...Calling GET\n");
     res = GET(req);
     
     printf("...Checking Response Code For 301\n");
     ck_assert_int_eq(res.response_code, 301);
+
+    printf("...Calling CLEANUP\n");
+    HTTP_CLIENT_CLEANUP();
+    printf("------------------------------\n");
+}
+
+START_TEST (test_get_google_w_redirect)
+{
+    printf("HTTP Client: GET https://google.com w/ REDIRECT\n");
+    printf("...Calling HTTP_CLIENT_INIT\n");
+    HTTP_CLIENT_INIT();
+    
+    printf("...Setting up request to https://google.com\n");
+    REQUEST req;
+    req.url = "https://google.com";
+    
+    printf("...Setting up response\n");
+    RESPONSE res;
+
+    printf("...Setting Redirect to true\n");
+    HTTP_ALLOW_REDIRECTS(true);
+    
+    printf("...Calling GET\n");
+    res = GET(req);
+    
+    printf("...Checking Response Code For 200\n");
+    ck_assert_int_eq(res.response_code, 200);
 
     printf("...Calling CLEANUP\n");
     HTTP_CLIENT_CLEANUP();
@@ -209,6 +239,7 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_create_response);
     tcase_add_test(tc_client, test_headers);
     tcase_add_test(tc_client, test_get_google_wo_redirect);
+    tcase_add_test(tc_client, test_get_google_w_redirect);
     suite_add_tcase(s, tc_client);
 
     return s;
