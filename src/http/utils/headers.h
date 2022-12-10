@@ -82,4 +82,11 @@ HEADER* GET_HEADER_BY_INDEX(HEADERS, int);
  */
 HEADER* GET_HEADER_BY_KEY(HEADERS, char*);
 
+
+/**
+ * @brief GET_HEADER_BY_KEY_PTR
+ * Get the header by key of the header
+ * @return HEADER* 
+ */
+HEADER* GET_HEADER_BY_KEY_PTR(HEADERS*, char*);
 #endif

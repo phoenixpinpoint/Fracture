@@ -203,3 +203,27 @@ HEADER* GET_HEADER_BY_KEY(HEADERS list, char* key)
     //If we make it to this point return NULL as no match was found.
     return NULL;
 }
+
+/**
+ * @brief GET_HEADER_BY_KEY
+ * Get the header by key of the header
+ * @param list 
+ * @param key 
+ * @return HEADER* 
+ */
+HEADER* GET_HEADER_BY_KEY_PTR(HEADERS* list, char* key)
+{
+        //For the length of the list
+    for (int i = 0; i < list->length; i++)
+    {
+        //Compare the key values
+        if (strcmp(list->headers[i]->key,key) == 0)
+        {
+            //If a match is found return the header.
+            return list->headers[i];
+        }
+    }
+    
+    //If we make it to this point return NULL as no match was found.
+    return NULL;
+}
