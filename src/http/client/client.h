@@ -43,6 +43,19 @@ bool HTTP_CLIENT_VALID();
 void HTTP_ALLOW_REDIRECTS(bool);
 
 /**
+ * @brief HTTP_SET_MAX_REDIRECTS
+ * HTTP_SET_MAX_REDIRECTS sets the maximum number of times a redirect is called.
+ */
+void HTTP_SET_MAX_REDIRECTS(int);
+
+/**
+ * @brief HTTP_GET_MAX_REDIRECTS
+ * HTTP_GET_MAX_REDIRECTS returns the current maximum allowed redirects. Default: 100.
+ * @return int 
+ */
+int HTTP_GET_MAX_REDIRECTS();
+
+/**
  * @brief GET
  * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 

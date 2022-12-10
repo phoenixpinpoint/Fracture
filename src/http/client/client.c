@@ -25,6 +25,7 @@
 CURL *curl;
 
 bool ALLOW_REDIRECTS = true;
+int MAX_REDIRECT = 100;
 
 int bodyInit = 0;
 char* bodyTextGobalVar;
@@ -160,6 +161,27 @@ bool HTTP_CLIENT_VALID()
 void HTTP_ALLOW_REDIRECTS(bool value)
 {
   ALLOW_REDIRECTS = value;
+}
+
+/**
+ * @brief HTTP_SET_MAX_REDIRECTS
+ * HTTP_SET_MAX_REDIRECTS sets the maximum number of times a redirect is called.
+ * @param max 
+ */
+void HTTP_SET_MAX_REDIRECTS(int max)
+{
+  MAX_REDIRECT = max;
+}
+
+
+/**
+ * @brief HTTP_GET_MAX_REDIRECTS()
+ * HTTP_GET_MAX_REDIRECTS returns the current maximum allowed redirects. Default: 100.
+ * @return int 
+ */
+int HTTP_GET_MAX_REDIRECTS()
+{
+  return MAX_REDIRECT;
 }
 
 /**

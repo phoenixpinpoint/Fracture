@@ -111,6 +111,10 @@ START_TEST (test_create_response)
 }
 END_TEST
 
+/**
+ * @brief Construct a new start test object
+ * test_headers creates a HEADER and HEADERS struct to test.
+ */
 START_TEST(test_headers)
 {
     printf("HTTP Client: HEADER and HEADERS\n");
@@ -162,6 +166,10 @@ START_TEST(test_headers)
 }
 END_TEST
 
+/**
+ * @brief Construct a new start test object
+ * test_get_google_wo_redirect tests going to google.come without redirects enabled.
+ */
 START_TEST (test_get_google_wo_redirect)
 {
     printf("HTTP Client: GET https://google.com w/o REDIRECT\n");
@@ -189,6 +197,10 @@ START_TEST (test_get_google_wo_redirect)
     printf("------------------------------\n");
 }
 
+/**
+ * @brief Construct a new start test object
+ * test_get_google_w_redirect test going to google.com with redirects enabled.
+ */
 START_TEST (test_get_google_w_redirect)
 {
     printf("HTTP Client: GET https://google.com w/ REDIRECT\n");
@@ -217,6 +229,36 @@ START_TEST (test_get_google_w_redirect)
 }
 
 /**
+ * @brief Construct a new start test object
+ * test_get_max_redirect returns the maximum number of redirects.
+ */
+START_TEST (test_get_max_redirect)
+{
+    printf("HTTP Client: Get the max redirect\n");
+    printf("...Calling get max redirect\n");
+    int max = HTTP_GET_MAX_REDIRECTS();
+    ck_assert_int_eq(max, 100);
+}
+
+/**
+ * @brief Construct a new start test object
+ * test_set_max_redirect tests the setting of the maximum redirects.
+ */
+START_TEST (test_set_max_redirect)
+{
+    printf("HTTP Client: Set the max redirect\n");
+    printf("...Calling set max redirect\n");
+    HTTP_SET_MAX_REDIRECTS(200);
+
+    printf("...Checking max redirect");
+    int max = HTTP_GET_MAX_REDIRECTS();
+    ck_assert_int_eq(max, 200);
+
+    printf("...Calling set max redirect to reset.\n");
+    HTTP_SET_MAX_REDIRECTS(100);
+}
+
+/**
  * @brief build a http_suite Suite struct
  * 
  * @return Suite* 
@@ -240,6 +282,8 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_headers);
     tcase_add_test(tc_client, test_get_google_wo_redirect);
     tcase_add_test(tc_client, test_get_google_w_redirect);
+    tcase_add_test(tc_client, test_get_max_redirect);
+    tcase_add_test(tc_client, test_set_max_redirect);
     suite_add_tcase(s, tc_client);
 
     return s;
