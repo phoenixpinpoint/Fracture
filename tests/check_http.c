@@ -196,6 +196,7 @@ START_TEST (test_get_google_wo_redirect)
     HTTP_CLIENT_CLEANUP();
     printf("------------------------------\n");
 }
+END_TEST
 
 /**
  * @brief Construct a new start test object
@@ -227,6 +228,45 @@ START_TEST (test_get_google_w_redirect)
     HTTP_CLIENT_CLEANUP();
     printf("------------------------------\n");
 }
+END_TEST
+
+/**
+ * @brief Construct a new start test object
+ * test_multiple_get tests multiple GET calls within the same function.
+ */
+START_TEST (test_multiple_get)
+{
+    printf("HTTP Client: Multiple HTTP GET Requests\n");
+    printf("...Calling HTTP_CLIENT_INIT\n");
+    HTTP_CLIENT_INIT();
+
+    printf("...Prepare REQUEST 1&2\n");
+    REQUEST req1;
+    req1.url = "https://purple.com";
+    REQUEST req2;
+    req2.url = "https://youtube.com";
+
+    printf("...Prepare RESPONSE\n");
+    RESPONSE res1;
+    RESPONSE res2;
+
+    printf("...Call GET on REQUEST 1\n");
+    res1 = GET(req1);
+
+    printf("...Call GET on REQUEST 2\n");
+    res2 = GET(req2);
+
+    printf("...Check 200 for RESPONSE 1\n");
+    ck_assert_int_eq(res1.response_code, 200);
+
+    printf("...Check 200 for RESPONSE 2\n");
+    ck_assert_int_eq(res2.response_code, 200);
+
+    printf("...Calling CLEANUP\n");
+    HTTP_CLIENT_CLEANUP();
+    printf("------------------------------\n");
+}
+END_TEST
 
 /**
  * @brief Construct a new start test object
@@ -240,6 +280,7 @@ START_TEST (test_get_max_redirect)
     ck_assert_int_eq(max, 100);
     printf("------------------------------\n");
 }
+END_TEST
 
 /**
  * @brief Construct a new start test object
@@ -259,6 +300,7 @@ START_TEST (test_set_max_redirect)
     HTTP_SET_MAX_REDIRECTS(100);
     printf("------------------------------\n");
 }
+END_TEST
 
 /**
  * @brief build a http_suite Suite struct
@@ -284,6 +326,7 @@ Suite *http_suite(void)
     tcase_add_test(tc_client, test_headers);
     tcase_add_test(tc_client, test_get_google_wo_redirect);
     tcase_add_test(tc_client, test_get_google_w_redirect);
+    tcase_add_test(tc_client, test_multiple_get);
     tcase_add_test(tc_client, test_get_max_redirect);
     tcase_add_test(tc_client, test_set_max_redirect);
     suite_add_tcase(s, tc_client);
