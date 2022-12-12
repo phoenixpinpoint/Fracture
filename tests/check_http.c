@@ -83,10 +83,10 @@ START_TEST (test_create_request)
     //Set the url, body, and header
     r.url = "https://test.com";
     r.body = "{'test' : 'hello,world'}";
-    r.header = "";
+    //r.header = "";
     ck_assert_str_eq(r.url, "https://test.com");
     ck_assert_str_eq(r.body, "{'test' : 'hello,world'}");
-    ck_assert_str_eq(r.header, "");
+    //ck_assert_str_eq(r.header, "");
     printf("------------------------------\n");
 }
 END_TEST
