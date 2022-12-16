@@ -45,10 +45,14 @@ endif
 TEST:
 	mkdir build
 	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o;
+	cd ./src/processmanager; gcc -c ./pmprocess.c -o ../../build/pmprocess.o;
 	mkdir ./tests/build
-	cd ./tests/build; gcc -c ../check_http.c
+	cd ./tests/build; gcc -c ../check_http.c; gcc -c ../check_pmprocess.c;
 	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
+	gcc ./build/pmprocess.o ./tests/build/check_pmprocess.o $(CFLAGS) -o ./tests/build/check_pmprocess
 	cd ./tests/build; ./check_http
+	cd ./tests/build; ./check_pmprocess
+
 
 CLEAN_TEST:
 	rm -rf ./build
