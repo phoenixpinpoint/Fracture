@@ -41,52 +41,33 @@ typedef struct HEADERS {
 } HEADERS;
 
 /**
- * @brief ADD_HEADERS
- * ADD_HEADERS takes a HEADERS list and a HEADER and adds the HEADER to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS 
+ * @brief CREATE_HEADER
+ * CREATE_HEADER returns a pointer to a newly created header object.
+ * @return HEADER *
  */
-HEADERS ADD_HEADER(HEADERS, HEADER);
+HEADER* CREATE_HEADER(char* key, char* value);
 
 /**
- * @brief ADD_HEADERS_PTR
- * ADD_HEADERS_PTR takes a HEADERS pointer list and a HEADER and adds the HEADER to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS* 
+ * @brief FREE_HEADER
+ * FREE_HEADER frees the the header struct an values
+ * @param h 
  */
-HEADERS* ADD_HEADER_PTR(HEADERS*, HEADER);
+void FREE_HEADER(HEADER* h);
 
 /**
- * @brief ADD_HEADER_PTR
- * ADD_NEW_HEADER_PTR takes a HEADERS pointer list two char poitners for the 
- * key and the value, adding them to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS* 
+ * @brief Set the key object
+ * 
+ * @param h 
+ * @param key 
  */
-HEADERS* ADD_NEW_HEADER_PTR(HEADERS*, char*, char*);
+void SET_KEY(HEADER *h, char* key);
 
 /**
- * @brief GET_HEADER_BY_INDEX
- * Return the Pointer at a given index in the HEADERS structure.
- * @return HEADER* 
+ * @brief Set the value object
+ * 
+ * @param h 
+ * @param value 
  */
-HEADER* GET_HEADER_BY_INDEX(HEADERS, int);
+void SET_VALUE(HEADER *h, char* value);
 
-/**
- * @brief GET_HEADER_BY_KEY
- * Get the header by key of the header
- * @return HEADER* 
- */
-HEADER* GET_HEADER_BY_KEY(HEADERS, char*);
-
-
-/**
- * @brief GET_HEADER_BY_KEY_PTR
- * Get the header by key of the header
- * @return HEADER* 
- */
-HEADER* GET_HEADER_BY_KEY_PTR(HEADERS*, char*);
 #endif

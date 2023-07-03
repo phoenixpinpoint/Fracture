@@ -53,3 +53,19 @@ TEST:
 CLEAN_TEST:
 	rm -rf ./build
 	rm -rf ./tests/build
+
+TEST_HEADER:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o;
+	mkdir ./tests/build
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; ./headers
+
+TEST_HEADER_LEAK:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o;
+	mkdir ./tests/build
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; valgrind ./headers
