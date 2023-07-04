@@ -24,11 +24,11 @@
 START_TEST (create_request)
 {
 	printf("Create Request:\n");
-    	REQUEST *req = CREATE_REQUEST("https://google.com", "", 0);
+    REQUEST *req = CREATE_REQUEST("https://google.com", "", 0);
 	printf("REQUEST_URL: *%s*\n", req->url);
 	ck_assert_int_eq(strcmp(req->url, "https://google.com"), 0 );
 	FREE_REQUEST(req);	
-    	printf("------------------------------\n");
+    printf("------------------------------\n");
 }
 END_TEST
 

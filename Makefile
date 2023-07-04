@@ -29,67 +29,82 @@ else
         CFLAGS += -lcurl -lcheck -lsubunit -lpthread -lm -lrt
     endif
 endif
+
+########################################################### 
+# General Builds
+# 
+# Below are the builds for the library
+###########################################################
+all: 
+	mkdir build
+	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o; gcc -c ./utils/request.c -o ../../build/request.o
+
+clean: 
+	rm -rf ./build
+	rm -rf ./tests/build
+
+
 ########################################################### 
 # Tests
 # 
 # Below are the builds for Unit testing.
 ###########################################################
-
-###### HTTP Module
-# HTTP Module Unit Testing
-######
-
-### HTTP Client
-# Client Testing
-###
-TEST:
-	mkdir build
-	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o;
-	mkdir ./tests/build
-	cd ./tests/build; gcc -c ../check_http.c
-	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
-	cd ./tests/build; ./check_http
-
-TEST_LEAK:
-	mkdir build
-	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o;
-	mkdir ./tests/build
-	cd ./tests/build; gcc -c ../check_http.c
-	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
-	cd ./tests/build; valgrind ./check_http
-
-CLEAN_TEST:
-	rm -rf ./build
-	rm -rf ./tests/build
-
-TEST_HEADER:
-	mkdir build
-	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o;
-	mkdir ./tests/build
-	cd ./tests/build; gcc -c ../headers.c
-	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
-	cd ./tests/build; ./headers
-
-TEST_HEADER_LEAK:
-	mkdir build
-	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o;
-	mkdir ./tests/build
-	cd ./tests/build; gcc -c ../headers.c
-	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
-	cd ./tests/build; valgrind --track-origins=yes ./headers
-
-TEST_REQUEST:
-	mkdir build
-	cd ./src/http; gcc -c ./utils/request.c -o ../../build/request.o;
-	mkdir ./tests/build
+test: all; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
-	cd ./tests/build; ./request
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; gcc -c ../http.c
+	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
+	cd ./tests/build; ./request; ./headers; ./http;
 
-TEST_REQUEST_LEAK:
-	mkdir build
-	cd ./src/http; gcc -c ./utils/request.c -o ../../build/request.o;
-	mkdir ./tests/build
+leaktest: all; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
-	cd ./tests/build; valgrind --track-origin=yes ./request
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; gcc -c ../http.c
+	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
+	cd ./tests/build; valgrind ./request; valgrind ./headers; valgrind ./http;
+
+testrequests: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../request.c
+	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
+	cd ./tests/build; ./request;
+
+leaktestrequest: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../request.c
+	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
+	cd ./tests/build; valgrind ./request;
+
+testheaders: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; ./headers;
+
+leaktestheaders: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../headers.c
+	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	cd ./tests/build; valgrind ./headers;
+
+testhttp: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../http.c
+	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
+	cd ./tests/build; ./http;
+
+leaktesthttp: all; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../http.c
+	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
+	cd ./tests/build; valgrind ./http;
+
+
+DEBUG_TEST:
+	mkdir build
+	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o; gcc -c ./utils/request.c -o ../../build/request.o
+	mkdir ./tests/build
+	cd ./tests/build; gcc -g -c ../check_http.c
+	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
+	cd ./tests/build; gdb ./check_http
+
+
+

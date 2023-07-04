@@ -195,7 +195,6 @@ HEADER* GET_HEADER_BY_KEY(HEADERLIST *list, char* key)
             {
                 return list->headers[iteration];
             }
-            return -1;
         }
     }
     else {
