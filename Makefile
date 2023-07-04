@@ -69,3 +69,19 @@ TEST_HEADER_LEAK:
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
 	cd ./tests/build; valgrind --track-origins=yes ./headers
+
+TEST_REQUEST:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/request.c -o ../../build/request.o;
+	mkdir ./tests/build
+	cd ./tests/build; gcc -c ../request.c
+	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
+	cd ./tests/build; ./request
+
+TEST_REQUEST_LEAK:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/request.c -o ../../build/request.o;
+	mkdir ./tests/build
+	cd ./tests/build; gcc -c ../request.c
+	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
+	cd ./tests/build; valgrind --track-origin=yes ./request

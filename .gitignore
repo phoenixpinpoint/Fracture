@@ -7,3 +7,10 @@
 
 # vscode
 .vscode
+
+# vim
+Makefile~
+*.swp
+*.un~
+*.c~
+*.h~
