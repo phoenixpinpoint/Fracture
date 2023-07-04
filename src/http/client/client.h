@@ -60,6 +60,6 @@ int HTTP_GET_MAX_REDIRECTS();
  * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
-RESPONSE GET(REQUEST);
+RESPONSE* GET(REQUEST*);
 
 #endif
