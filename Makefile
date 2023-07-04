@@ -47,6 +47,10 @@ request:
 	mkdir build
 	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/request.c -o ../../build/request.o
 
+response:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o;
+
 debug:
 	mkdir build
 	cd ./src/http; gcc -g -c ./client/client.c -o ../../build/http.o; gcc -g -c ./utils/headers.c -o ../../build/headers.o; gcc -g -c ./utils/response.c -o ../../build/response.o; gcc -g -c ./utils/request.c -o ../../build/request.o
@@ -89,6 +93,16 @@ leaktestrequest: request; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; valgrind ./request;
+
+testresponse: response; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../response.c
+	gcc ./build/response.o ./tests/build/response.o $(CFLAGS) -o ./tests/build/response
+	cd ./tests/build; ./response;
+
+leaktestresponse: response; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../response.c
+	gcc ./build/response.o ./tests/build/response.o $(CFLAGS) -o ./tests/build/response
+	cd ./tests/build; valgrind ./response;
 
 testheaders: headers; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../headers.c

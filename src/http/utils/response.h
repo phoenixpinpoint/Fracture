@@ -16,9 +16,34 @@
 #include "./headers.h"
 
 typedef struct RESPONSE {
-    long response_code;  // Response Code
+    int response_code;  // Response Code
     char* body;         // Raw body as char array TODO: build JSON body
-    HEADERLIST* headers;   // Pointer to a HEADER.
+    HEADERLIST* headers;       // String representation of header.
 } RESPONSE;
+
+/**
+ * @brief Create a response object
+ * 
+ * @param response_code 
+ * @param body 
+ * @param list 
+ * @return RESPONSE* 
+ */
+RESPONSE* CREATE_RESPONSE(long response_code, char* body, HEADERLIST* list);
+
+/**
+ * @brief Frees a response object
+ * 
+ * @param res 
+ */
+void FREE_RESPONSE(RESPONSE* res);
+
+/**
+ * @brief Set the body object
+ * 
+ * @param res 
+ * @param body 
+ */
+void SET_RESPONSE_BODY(RESPONSE* res, char* body);
 
 #endif
