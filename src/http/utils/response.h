@@ -18,7 +18,7 @@
 typedef struct RESPONSE {
     long response_code;  // Response Code
     char* body;         // Raw body as char array TODO: build JSON body
-    HEADERS* headers;   // Pointer to a HEADER.
+    HEADERLIST* headers;   // Pointer to a HEADER.
 } RESPONSE;
 
 #endif
