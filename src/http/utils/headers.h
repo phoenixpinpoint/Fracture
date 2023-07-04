@@ -27,66 +27,120 @@
  */
 typedef struct HEADER {
     char* key;
-    void* value;
+    char* value;
 } HEADER;
 
 /**
- * @brief HEADERS
- * HEADERS is a structure that stores length which is the number of headers in the list.
+ * @brief HEADERLIST
+ * HEADERLIST is a structure that stores length which is the number of headers in the list.
  * As well as an "array" of pointers that are the headers.
  */
-typedef struct HEADERS {
+typedef struct HEADERLIST {
     int length;
     HEADER** headers;
-} HEADERS;
+} HEADERLIST;
+
 
 /**
- * @brief ADD_HEADERS
- * ADD_HEADERS takes a HEADERS list and a HEADER and adds the HEADER to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS 
+ * @brief CREATE_HEADER
+ * CREATE_HEADER returns a pointer to a newly created header object.
+ * @return HEADER *
  */
-HEADERS ADD_HEADER(HEADERS, HEADER);
+HEADER* CREATE_HEADER(char* key, char* value);
 
 /**
- * @brief ADD_HEADERS_PTR
- * ADD_HEADERS_PTR takes a HEADERS pointer list and a HEADER and adds the HEADER to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS* 
+ * @brief FREE_HEADER
+ * FREE_HEADER frees the the header struct an values
+ * @param h 
  */
-HEADERS* ADD_HEADER_PTR(HEADERS*, HEADER);
+void FREE_HEADER(HEADER* h);
 
 /**
- * @brief ADD_HEADER_PTR
- * ADD_NEW_HEADER_PTR takes a HEADERS pointer list two char poitners for the 
- * key and the value, adding them to HEADERS. 
- * If there isn't any current headers it allocates memory for the user. 
- * IF there is it reallocates and adds the header.
- * @return HEADERS* 
+ * @brief Set the key object
+ * 
+ * @param h 
+ * @param key 
  */
-HEADERS* ADD_NEW_HEADER_PTR(HEADERS*, char*, char*);
+void SET_KEY(HEADER *h, char* key);
 
 /**
- * @brief GET_HEADER_BY_INDEX
- * Return the Pointer at a given index in the HEADERS structure.
+ * @brief Set the value object
+ * 
+ * @param h 
+ * @param value 
+ */
+void SET_VALUE(HEADER *h, char* value);
+
+/**
+ * @brief Create a header list object
+ * 
+ * @return HEADERLIST* 
+ */
+HEADERLIST* CREATE_HEADER_LIST();
+
+/**
+ * @brief Add Header to Existing List of Headers
+ * 
+ * @param list 
+ * @param header 
+ */
+void ADD_HEADER(HEADERLIST *list, HEADER *header);
+
+/**
+ * @brief Get the header object
+ * 
+ * @param list 
+ * @param index 
  * @return HEADER* 
  */
-HEADER* GET_HEADER_BY_INDEX(HEADERS, int);
+HEADER* GET_HEADER(HEADERLIST *list, int index);
 
 /**
- * @brief GET_HEADER_BY_KEY
- * Get the header by key of the header
+ * @brief Get the header by key object
+ * 
+ * @param list 
+ * @param key 
  * @return HEADER* 
  */
-HEADER* GET_HEADER_BY_KEY(HEADERS, char*);
-
+HEADER* GET_HEADER_BY_KEY(HEADERLIST *list, char* key);
 
 /**
- * @brief GET_HEADER_BY_KEY_PTR
- * Get the header by key of the header
- * @return HEADER* 
+ * @brief removes header at a given index
+ * 
+ * @param list 
+ * @param index 
  */
-HEADER* GET_HEADER_BY_KEY_PTR(HEADERS*, char*);
+void REMOVE_HEADER(HEADERLIST *list, int index);
+
+/**
+ * @brief removes header at a given key
+ * 
+ * @param list 
+ * @param key 
+ */
+void REMOVE_HEADER_BY_KEY(HEADERLIST *list, char* key);
+
+/**
+ * @brief Get the header object index
+ * 
+ * @param list 
+ * @param key 
+ * @return int 
+ */
+int GET_HEADER_INDEX(HEADERLIST *list, char* key);
+
+/**
+ * @brief Prints out the Header List
+ * 
+ * @param list 
+ */
+void PRINT_HEADER_LIST(HEADERLIST *list);
+
+/**
+ * @brief Frees the Header list structure
+ * NOTE: does not free the HEADERs themselves.
+ * @param list 
+ */
+void FREE_HEADER_LIST(HEADERLIST *list);
+
 #endif
