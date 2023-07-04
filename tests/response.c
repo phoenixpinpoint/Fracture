@@ -35,22 +35,19 @@ END_TEST
 /**
  * @brief Update a Request object.
  */
-// START_TEST (update_request)
-// {
-// 	printf("Create Request:\n");
-//     REQUEST *req = CREATE_REQUEST("https://google.com", "", 0);
-//     ck_assert_int_eq(strcmp(req->url, "https://google.com"), 0 );
+START_TEST (update_response)
+{
+	printf("Update Response:\n");
+    RESPONSE *res = CREATE_RESPONSE(200, "", 0);
+    ck_assert_int_eq(strcmp(res->body, ""), 0 );
 
-//     SET_REQUEST_BODY(req, "TEST");
-//     ck_assert_int_eq(strcmp(req->body, "TEST"), 0 );
-    
-//     SET_URL(req, "https://purple.com");
-// 	ck_assert_int_eq(strcmp(req->url, "https://purple.com"), 0 );
+    SET_RESPONSE_BODY(res, "TEST");
+    ck_assert_int_eq(strcmp(res->body, "TEST"), 0 );
 	
-//     FREE_REQUEST(req);
-//     printf("------------------------------\n");
-// }
-// END_TEST
+    FREE_RESPONSE(res);
+    printf("------------------------------\n");
+}
+END_TEST
 
 /**
  * @brief build a http_suite Suite struct
@@ -69,7 +66,7 @@ Suite *response_suite(void)
     
     //Add our test to the tcase and add the test case to the suite.
     tcase_add_test(tc_response, create_response);
-    //tcase_add_test(tc_response update_response);
+    tcase_add_test(tc_response, update_response);
     suite_add_tcase(s, tc_response);
 
     return s;
