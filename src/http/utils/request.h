@@ -39,4 +39,20 @@ REQUEST* CREATE_REQUEST(char* url, char* body, HEADERLIST* list);
  */
 void FREE_REQUEST(REQUEST* req);
 
+/**
+ * @brief Set the body object
+ * 
+ * @param req 
+ * @param body 
+ */
+void SET_REQUEST_BODY(REQUEST* req, char* body);
+
+/**
+ * @brief Set the url object
+ * 
+ * @param req 
+ * @param url 
+ */
+void SET_URL(REQUEST* req, char* url);
+
 #endif

@@ -39,9 +39,22 @@ all:
 	mkdir build
 	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o; gcc -c ./utils/request.c -o ../../build/request.o
 
+headers:
+	mkdir build
+	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o;
+
+request: 
+	mkdir build
+	cd ./src/http; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/request.c -o ../../build/request.o
+
+debug:
+	mkdir build
+	cd ./src/http; gcc -g -c ./client/client.c -o ../../build/http.o; gcc -g -c ./utils/headers.c -o ../../build/headers.o; gcc -g -c ./utils/response.c -o ../../build/response.o; gcc -g -c ./utils/request.c -o ../../build/request.o
+
 clean: 
 	rm -rf ./build
 	rm -rf ./tests/build
+	rm -rf ./debugs/build
 
 
 ########################################################### 
@@ -67,22 +80,22 @@ leaktest: all; mkdir ./tests/build
 	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
 	cd ./tests/build; valgrind ./request; valgrind ./headers; valgrind ./http;
 
-testrequests: all; mkdir ./tests/build
+testrequest: request; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; ./request;
 
-leaktestrequest: all; mkdir ./tests/build
+leaktestrequest: request; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; valgrind ./request;
 
-testheaders: all; mkdir ./tests/build
+testheaders: headers; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
 	cd ./tests/build; ./headers;
 
-leaktestheaders: all; mkdir ./tests/build
+leaktestheaders: headers; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
 	cd ./tests/build; valgrind ./headers;
@@ -96,6 +109,12 @@ leaktesthttp: all; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../http.c
 	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/http.o $(CFLAGS) -o ./tests/build/http
 	cd ./tests/build; valgrind ./http;
+
+debughttp: debug; mkdir ./debugs/build
+	cd ./debugs/build; gcc -g -c ../http.c
+	gcc ./build/http.o ./build/headers.o ./build/request.o ./build/response.o ./debugs/build/http.o $(CFLAGS) -o ./debugs/build/http
+	cd ./debugs/build; gdb ./http;
+
 
 
 DEBUG_TEST:

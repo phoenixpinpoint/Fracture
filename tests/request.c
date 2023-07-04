@@ -25,9 +25,29 @@ START_TEST (create_request)
 {
 	printf("Create Request:\n");
     REQUEST *req = CREATE_REQUEST("https://google.com", "", 0);
-	printf("REQUEST_URL: *%s*\n", req->url);
 	ck_assert_int_eq(strcmp(req->url, "https://google.com"), 0 );
+
 	FREE_REQUEST(req);	
+    printf("------------------------------\n");
+}
+END_TEST
+
+/**
+ * @brief Update a Request object.
+ */
+START_TEST (update_request)
+{
+	printf("Create Request:\n");
+    REQUEST *req = CREATE_REQUEST("https://google.com", "", 0);
+    ck_assert_int_eq(strcmp(req->url, "https://google.com"), 0 );
+
+    SET_REQUEST_BODY(req, "TEST");
+    ck_assert_int_eq(strcmp(req->body, "TEST"), 0 );
+    
+    SET_URL(req, "https://purple.com");
+	ck_assert_int_eq(strcmp(req->url, "https://purple.com"), 0 );
+	
+    FREE_REQUEST(req);
     printf("------------------------------\n");
 }
 END_TEST
@@ -49,6 +69,7 @@ Suite *request_suite(void)
     
     //Add our test to the tcase and add the test case to the suite.
     tcase_add_test(tc_request, create_request);
+    tcase_add_test(tc_request, update_request);
     suite_add_tcase(s, tc_request);
 
     return s;

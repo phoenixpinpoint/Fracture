@@ -17,15 +17,26 @@ libcheck (Unit Testing)
 - libcheck
 - libcurl
 
-### Client Tests
+### Tests
 From the root directory 
 ```
-make TEST
+make test
 ```
 
 To clean up
 ```
-make CLEAN_TEST
+make clean
+```
+
+### Build Library
+From the root directory 
+```
+make all
+```
+
+To clean up
+```
+make clean
 ```
 
 ## Contributing

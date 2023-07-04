@@ -315,17 +315,14 @@ Suite *http_suite(void)
     tc_client = tcase_create("Client");
     
     //Add our test to the tcase and add the test case to the suite.
-    // tcase_add_test(tc_client, test_valid);
-    // tcase_add_test(tc_client, test_init);
-    // tcase_add_test(tc_client, test_cleanup);
-    // tcase_add_test(tc_client, test_create_request);
-    // tcase_add_test(tc_client, test_create_response);
-    // tcase_add_test(tc_client, test_headers);
+    tcase_add_test(tc_client, test_valid);
+    tcase_add_test(tc_client, test_init);
+    tcase_add_test(tc_client, test_cleanup);
     tcase_add_test(tc_client, test_get_google_wo_redirect);
-    // tcase_add_test(tc_client, test_get_google_w_redirect);
-    // tcase_add_test(tc_client, test_multiple_get);
-    // tcase_add_test(tc_client, test_get_max_redirect);
-    // tcase_add_test(tc_client, test_set_max_redirect);
+    tcase_add_test(tc_client, test_get_google_w_redirect);
+    tcase_add_test(tc_client, test_multiple_get);
+    tcase_add_test(tc_client, test_get_max_redirect);
+    tcase_add_test(tc_client, test_set_max_redirect);
     suite_add_tcase(s, tc_client);
 
     return s;

@@ -29,6 +29,7 @@ HEADER* CREATE_HEADER(char* key, char* value)
     {
         instance->key = (char*)malloc(strlen(key)+1*sizeof(char));
         strncpy(instance->key, key, strlen(key)+1);
+        instance->key[strlen(instance->key)] = '\0';
     }
     else {
         return -1;
@@ -39,6 +40,7 @@ HEADER* CREATE_HEADER(char* key, char* value)
     {
         instance->value = (char*)malloc(strlen(value)+1*sizeof(char));
         strncpy(instance->value, value, strlen(value)+1);
+        instance->value[strlen(instance->value)] = '\0';
     }
     else {
         return -1;
@@ -88,8 +90,9 @@ void SET_KEY(HEADER *h, char* key)
     //If there is a key value
     if(key)
     {
-        h->key = (char*)malloc(strlen(key)*sizeof(char));
-        strncpy(h->key, key, strlen(key));
+        h->key = (char*)malloc(strlen(key)+1*sizeof(char));
+        strncpy(h->key, key, strlen(key)+1);
+        h->key[strlen(h->key)] = '\0';
     }
     return;
 }
@@ -112,8 +115,9 @@ void SET_VALUE(HEADER *h, char* value)
     //Value passed to the function
     if(value)
     {
-        h->value = (char*)malloc(strlen(value)*sizeof(char));
-        strncpy(h->value, value, strlen(value));
+        h->value = (char*)malloc(strlen(value)+1*sizeof(char));
+        strncpy(h->value, value, strlen(value)+1);
+        h->value[strlen(h->value)] = '\0';
     }
 }
 
