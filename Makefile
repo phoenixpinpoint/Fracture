@@ -68,4 +68,4 @@ TEST_HEADER_LEAK:
 	mkdir ./tests/build
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
-	cd ./tests/build; valgrind ./headers
+	cd ./tests/build; valgrind --track-origins=yes ./headers
