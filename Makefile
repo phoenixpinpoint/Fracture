@@ -50,6 +50,14 @@ TEST:
 	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
 	cd ./tests/build; ./check_http
 
+TEST_LEAK:
+	mkdir build
+	cd ./src/http; gcc -c ./client/client.c -o ../../build/http.o; gcc -c ./utils/headers.c -o ../../build/headers.o; gcc -c ./utils/response.c -o ../../build/response.o;
+	mkdir ./tests/build
+	cd ./tests/build; gcc -c ../check_http.c
+	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
+	cd ./tests/build; valgrind ./check_http
+
 CLEAN_TEST:
 	rm -rf ./build
 	rm -rf ./tests/build

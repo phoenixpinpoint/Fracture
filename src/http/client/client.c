@@ -86,7 +86,9 @@ static size_t headerCallback(char *buffer, size_t size, size_t nitems, void *use
     if (value[0] == ' ') value++;
 
     //Add the header
-    userdata = ADD_NEW_HEADER_PTR(userdata, key, value);
+    HEADER *header = CREATE_HEADER(key, value);
+    ADD_HEADER(userdata, header);
+    //userdata = ADD_NEW_HEADER_PTR(userdata, key, value); //OLD HEADER STUFFS
   }
 
   free(bufferCopy);
@@ -194,10 +196,12 @@ RESPONSE GET(REQUEST req)
   //Create A Response Object
   RESPONSE res;
 
+  printf("REQ_URL:*%s*\n", req.url);
+
   //Allocate and initialize the Headers Struct
-  res.headers = calloc(1, sizeof(HEADERS));
+  res.headers = calloc(1, sizeof(HEADERLIST));
   res.headers->length = 0;
-  res.headers->headers = NULL;
+  res.headers->headers = 0;
 
   //If curl is valid
   if(curl)
@@ -226,20 +230,19 @@ RESPONSE GET(REQUEST req)
       if(response_code == 301 && ALLOW_REDIRECTS == true)
       {
         //Get the location header from the Response
-        void* redirectUrlValue = GET_HEADER_BY_KEY_PTR(res.headers, "location")->value;
-        
-        //Allocate a string and store the cast of the value
-        char* redirectUrl = (char*)calloc(strlen((char*) redirectUrlValue), sizeof(char));
-        strncpy(redirectUrl, (char*)redirectUrlValue, strlen((char*) redirectUrlValue));
-        
-        //Remove the last new line
-        if(redirectUrl[strlen(redirectUrl)-1] == '\r')
+        char* redirectUrlValue = GET_HEADER_BY_KEY(res.headers, "location")->value;
+
+        //Scrub /r and /n from URL
+        for(int iteration = 0; iteration < strlen(redirectUrlValue); iteration++)
         {
-          redirectUrl[strlen(redirectUrl)-1] = '\0';
+          if(redirectUrlValue[iteration] == '\r' || redirectUrlValue[iteration] == '\n')
+          {
+            redirectUrlValue[iteration] = '\0';
+          }        
         }
         
         //Set the redirect URL
-        req.url = redirectUrl;
+        req.url = redirectUrlValue;
 
         //Call GET again with the new request.
         return res = GET(req);
