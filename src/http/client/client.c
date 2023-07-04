@@ -88,7 +88,6 @@ static size_t headerCallback(char *buffer, size_t size, size_t nitems, void *use
     //Add the header
     HEADER *header = CREATE_HEADER(key, value);
     ADD_HEADER(userdata, header);
-    //userdata = ADD_NEW_HEADER_PTR(userdata, key, value); //OLD HEADER STUFFS
   }
 
   free(bufferCopy);
@@ -106,15 +105,17 @@ static size_t bodyCallback(char *data, size_t size, size_t nitems, void *userdat
    */
   if(bodyInit == 0)
   {
-    bodyTextGobalVar = (char*)calloc(nitems, sizeof(char));
-    strncpy(bodyTextGobalVar, data, nitems);
+    bodyTextGobalVar = (char*)calloc(nitems+1, sizeof(char));
+    strncpy(bodyTextGobalVar, data, nitems+1);
+    bodyTextGobalVar[nitems] = '\0';
     bodyInit = 1;
   }
   else
   {
     size_t oldBodySize = strlen(bodyTextGobalVar);
-    bodyTextGobalVar = realloc(bodyTextGobalVar, oldBodySize+nitems);
+    bodyTextGobalVar = realloc(bodyTextGobalVar, oldBodySize+nitems+1);
     strncat(bodyTextGobalVar, data, nitems);
+    bodyTextGobalVar[oldBodySize+nitems] = '\0';
   }
   
   return nitems * size;
@@ -191,29 +192,27 @@ int HTTP_GET_MAX_REDIRECTS()
  * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
-RESPONSE GET(REQUEST req)
+RESPONSE* GET(REQUEST* req)
 {
   //Create A Response Object
-  RESPONSE res;
-
-  printf("REQ_URL:*%s*\n", req.url);
+  RESPONSE *res = CREATE_RESPONSE(0, "", 0);
 
   //Allocate and initialize the Headers Struct
-  res.headers = calloc(1, sizeof(HEADERLIST));
-  res.headers->length = 0;
-  res.headers->headers = 0;
+  res->headers = calloc(1, sizeof(HEADERLIST));
+  res->headers->length = 0;
+  res->headers->headers = 0;
 
   //If curl is valid
   if(curl)
   {
     //Setup cURL
-    curl_easy_setopt(curl, CURLOPT_URL, req.url); //Set the URL
-    curl_easy_setopt(curl, CURLOPT_HEADERDATA, res.headers);//Set the Header Struct.
+    curl_easy_setopt(curl, CURLOPT_URL, req->url); //Set the URL
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, res->headers);//Set the Header Struct.
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, headerCallback);//Set the HEADERFUNCTION
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, bodyCallback);//Set our WRITEFUNCTION
     CURLcode curl_res;//Create a response object.
 
-    curl_res = curl_easy_perform(curl);//Execute the cURL call.
+  curl_res = curl_easy_perform(curl);//Execute the cURL call.
     
     if(curl_res != CURLE_OK)
     {
@@ -225,12 +224,15 @@ RESPONSE GET(REQUEST req)
       //Setup response code handling.
       long response_code;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-      res.response_code = response_code;
+      res->response_code = response_code;
       //IF we get a moved HTTP code and redirects are enabled.
       if(response_code == 301 && ALLOW_REDIRECTS == true)
       {
         //Get the location header from the Response
-        char* redirectUrlValue = GET_HEADER_BY_KEY(res.headers, "location")->value;
+        size_t lengthOfLocation = strlen(GET_HEADER_BY_KEY(res->headers, "location")->value);
+        char* redirectUrlValue = (char*)malloc(lengthOfLocation+1*sizeof(char));
+        strncpy(redirectUrlValue, GET_HEADER_BY_KEY(res->headers, "location")->value, lengthOfLocation+1*sizeof(char));
+        redirectUrlValue[strlen(redirectUrlValue)] = '\0';
 
         //Scrub /r and /n from URL
         for(int iteration = 0; iteration < strlen(redirectUrlValue); iteration++)
@@ -240,20 +242,22 @@ RESPONSE GET(REQUEST req)
             redirectUrlValue[iteration] = '\0';
           }        
         }
+
+        for (int header = 0; header < res->headers->length; header++)
+        {
+          FREE_HEADER(res->headers->headers[header]);
+        }
+
         
-        //Set the redirect URL
-        req.url = redirectUrlValue;
+        //Set the redirect URL and free the temporary var.
+        SET_URL(req, redirectUrlValue);
+        free(redirectUrlValue);
 
         //Call GET again with the new request.
         return res = GET(req);
       }
       //Set the body
-      /*
-      * Allocate the body to the final size of the bodyTextGlobalVar and then copy it.
-      * Free bodyTextGlobalVar to and set bodyInit flag to 0 for the next calls.
-      */
-      res.body = calloc(strlen(bodyTextGobalVar), sizeof(char));
-      strncpy(res.body, bodyTextGobalVar, strlen(bodyTextGobalVar));
+      SET_RESPONSE_BODY(res, bodyTextGobalVar);
       free(bodyTextGobalVar);
       bodyInit = 0;
     }
