@@ -1,9 +1,9 @@
 /**
- * @file check_http.c
+ * @file client.c
  * @author Adam Guthrie
- * @brief check_http.c [tests]
+ * @brief client.c [tests]
  * 
- *  This file contains the unit tests for the HTTP library. 
+ *  This file contains the unit tests for the Client library. 
  *  
  * @version 0.1
  * @date 2022-11-17
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../src/http/http.h"
+#include "../src/http/client/client.h"
 
 /**
  * @brief Construct a new start test object
