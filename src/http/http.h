@@ -18,7 +18,4 @@
 // Client Header
 #include "client/client.h"
 
-// Utils Header
-#include "utils/utils.h"
-
 #endif

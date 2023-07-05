@@ -15,7 +15,10 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../utils/utils.h"
+#include "request.h"
+#include "response.h"
+#include "headers.h"
+
 #include <stdbool.h>
 
 /**

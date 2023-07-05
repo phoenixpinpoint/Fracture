@@ -15,8 +15,8 @@
 #include <check.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/http/utils/headers.h"
-#include "../src/http/utils/response.h"
+#include "../src/http/headers.h"
+#include "../src/http/response.h"
 
 /**
  * @brief Create a Response object.

@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../src/http/utils/request.h"
+#include "../src/http/request.h"
 
 /**
  * @brief Create a Request object.
