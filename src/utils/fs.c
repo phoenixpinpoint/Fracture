@@ -14,6 +14,8 @@
 
 #include "fs.h"
 
+#define FS_PATH_MAX 1024
+
 /**
  * @brief Reads the content of the passed filepatch
  * 
@@ -53,3 +55,19 @@ char* READ_FILE(char* path)
         return "-2";
     }
 }
+
+/**
+ * @brief Get the Current working directory
+ * 
+ * @return char* 
+ */
+char* GET_CWD()
+{
+  char* cwd = (char*)malloc(FS_PATH_MAX*sizeof(char));
+  if (getcwd(cwd, FS_PATH_MAX) != NULL) {
+    return cwd;
+  } else {
+    return "-1";
+  }
+}
+

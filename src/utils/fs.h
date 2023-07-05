@@ -17,6 +17,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
+
+/**
+ * @brief Get the Current working directory
+ * 
+ * @return char* 
+ */
+char* GET_CWD();
 
 /**
  * @brief Reads the content of the passed filepatch

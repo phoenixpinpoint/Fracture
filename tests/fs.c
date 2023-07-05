@@ -25,9 +25,21 @@ START_TEST (read_file)
 {
     printf("Reading File test.txt\n");
     char* buffer = READ_FILE("../test.txt");
-    printf("RAW: *%s*\n", "Hello, World!");
-    printf("FILE: *%s*\n", buffer);
     ck_assert_int_eq(strncmp("Hello, World!", buffer, strlen("Hello, World!")), 0);
+    free(buffer);
+    printf("------------------------------\n");
+}
+END_TEST
+
+/**
+ * @brief Get Current Working Directory Test
+ */
+START_TEST (get_cwd)
+{
+    printf("Getting CWD\n");
+    char* buffer = GET_CWD();
+    printf("%s\n", buffer);
+    ck_assert_int_ne(strncmp("-1", buffer, strlen("-1")), 0);
     printf("------------------------------\n");
 }
 END_TEST
@@ -49,6 +61,7 @@ Suite *fs_suite(void)
     
     //Add our test to the tcase and add the test case to the suite.
     tcase_add_test(tc_fs, read_file);
+    tcase_add_test(tc_fs, get_cwd);
     suite_add_tcase(s, tc_fs);
 
     return s;
