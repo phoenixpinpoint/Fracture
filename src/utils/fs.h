@@ -45,10 +45,10 @@ char* GET_CWD();
 /**
  * @brief Reads the content of the passed filepatch
  * 
- * @param patch
+ * @param path
  * @return char* 
  */
-char* READ_FILE(char* patch);
+char* READ_FILE(char* path);
 
 /**
  * @brief Create a directory list object

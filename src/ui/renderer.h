@@ -13,4 +13,10 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <emscripten.h>
+
+void SET_BODY_INNER_HTML(char* body);
+
+void SET_INNER_HTML_BY_ID(char* id, char* body);
+
 #endif

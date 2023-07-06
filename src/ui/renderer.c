@@ -10,7 +10,14 @@
  * 
  * @copyright Copyright (c) 2023
  */
-#ifndef RENDERER_H
-#define RENDERER_H
+#include "renderer.h"
 
-#endif
+EM_JS(void, SET_INNER_HTML_BY_ID, (char* id, char* body), {
+    document.getElementById(UTF8ToString(id)).innerHTML = UTF8ToString(body);
+    return;
+});
+
+EM_JS(void, SET_BODY_INNER_HTML, (char* body), {
+    document.body.innerHTML = UTF8ToString(body);
+    return;
+});

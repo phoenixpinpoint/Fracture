@@ -162,4 +162,4 @@ DEBUG_TEST:
 	cd ./tests/build; gdb ./check_http
 
 dev:
-	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 ./src/webc.c ./app.c -o app
+	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 --embed-file assets ./src/webc.c ./app.c -o app
