@@ -13,7 +13,7 @@
 #ifndef RESPONSE_H
 #define RESPONSE_H
 
-#include "./headers.h"
+#include "headers.h"
 
 typedef struct RESPONSE {
     int response_code;  // Response Code

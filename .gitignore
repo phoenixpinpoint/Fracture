@@ -14,3 +14,7 @@ Makefile~
 *.un~
 *.c~
 *.h~
+
+# WebC
+app
+app.wasm

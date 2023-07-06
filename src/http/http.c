@@ -12,10 +12,7 @@
  * 
  */
 
-#include "http.h"
-
-// Client Library
-#include "client/client.c"
-
-// Utils Module
-#include "utils/utils.c"
+#include "client.c"
+#include "headers.c"
+#include "request.c"
+#include "response.c"

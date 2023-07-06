@@ -12,15 +12,11 @@
  * @copyright Copyright (c) 2022
  * 
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-#include <curl/curl.h>
 
 #include "client.h"
 
+
+#ifdef SERVER
 // Setup Client cURL.
 CURL *curl;
 
@@ -188,11 +184,11 @@ int HTTP_GET_MAX_REDIRECTS()
 }
 
 /**
- * @brief GET
- * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
+ * @brief CURL_GET
+ * CURL_GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
-RESPONSE* GET(REQUEST* req)
+RESPONSE* CURL_GET(REQUEST* req)
 {
   //Create A Response Object
   RESPONSE *res = CREATE_RESPONSE(0, "", 0);
@@ -254,7 +250,7 @@ RESPONSE* GET(REQUEST* req)
         free(redirectUrlValue);
 
         //Call GET again with the new request.
-        return res = GET(req);
+        return res = CURL_GET(req);
       }
       //Set the body
       SET_RESPONSE_BODY(res, bodyTextGobalVar);
@@ -269,3 +265,30 @@ RESPONSE* GET(REQUEST* req)
     return res;
   }
 }
+#endif
+
+#ifdef CLIENT
+/**
+ * @brief JS_FETCH
+ * JS_FETCH calls JS fetch() API for GET requests
+ * @return RESPONSE 
+ */
+EM_ASYNC_JS(char*, JS_FETCH, (char *url), {
+  let value = await fetch(UTF8ToString(url), {});
+  value = await value.text();
+  return allocate(intArrayFromString(value),ALLOC_NORMAL);
+});
+
+
+/**
+ * @brief JS_GET
+ * JS_GET is a wrapper function to call the JS_FETCH function
+ * @return RESPONSE 
+ */
+RESPONSE* JS_GET(REQUEST* req)
+{
+  RESPONSE *fetchRes = CREATE_RESPONSE(0,"",0);
+  SET_RESPONSE_BODY(fetchRes, JS_FETCH(req->url));
+  return fetchRes;
+}
+#endif

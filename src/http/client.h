@@ -15,8 +15,25 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../utils/utils.h"
+#include "request.h"
+#include "response.h"
+#include "headers.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+
+#ifdef SERVER
+    #include <curl/curl.h>
+    #define GET CURL_GET
+#endif
+
+#ifdef CLIENT
+    #include <emscripten.h>
+    #define GET JS_GET
+#endif
+
 
 /**
  * @brief HTTP_CLIENT_INIT()
@@ -56,10 +73,24 @@ void HTTP_SET_MAX_REDIRECTS(int);
 int HTTP_GET_MAX_REDIRECTS();
 
 /**
- * @brief GET
- * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
+ * @brief CURL_GET
+ * CURL_GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
-RESPONSE* GET(REQUEST*);
+RESPONSE* CURL_GET(REQUEST*);
+
+/**
+ * @brief JS_FETCH
+ * JS_FETCH calls JS fetch() API for GET requests
+ * @return RESPONSE 
+ */
+char* JS_FETCH(char *url);
+
+/**
+ * @brief JS_GET
+ * JS_GET is a wrapper function to call the JS_FETCH function
+ * @return RESPONSE 
+ */
+RESPONSE* JS_GET(REQUEST* req);
 
 #endif

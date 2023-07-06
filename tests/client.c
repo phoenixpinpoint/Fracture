@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../src/http/client/client.h"
+#include "../src/http/client.h"
 
 /**
  * @brief Construct a new start test object

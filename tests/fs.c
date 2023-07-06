@@ -1,12 +1,12 @@
 /**
- * @file response.c
+ * @file fs.c
  * @author Adam Guthrie
- * @brief response.c [tests]
+ * @brief fs.c [tests]
  * 
- *  This file contains the unit tests for Response for WebC. 
+ *  This file contains the unit tests for the File System library. 
  *  
  * @version 0.1
- * @date 2023-07-03
+ * @date 2023-07-05
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -15,36 +15,43 @@
 #include <check.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/http/headers.h"
-#include "../src/http/response.h"
+#include <stdbool.h>
+#include "../src/utils/fs.h"
 
 /**
- * @brief Create a Response object.
+ * @brief Read File uses the read file function.
  */
-START_TEST (create_response)
+START_TEST (read_file)
 {
-	printf("Create Response:\n");
-    RESPONSE *res = CREATE_RESPONSE(200, "", 0);
-	ck_assert_int_eq(strcmp(res->body, ""), 0 );
-
-	FREE_RESPONSE(res);	
+    printf("Reading File test.txt\n");
+    char* buffer = READ_FILE("../test.txt");
+    ck_assert_int_eq(strncmp("Hello, World!", buffer, strlen("Hello, World!")), 0);
+    free(buffer);
     printf("------------------------------\n");
 }
 END_TEST
 
 /**
- * @brief Update a Request object.
+ * @brief Get Current Working Directory Test
  */
-START_TEST (update_response)
+START_TEST (get_cwd)
 {
-	printf("Update Response:\n");
-    RESPONSE *res = CREATE_RESPONSE(200, "", 0);
-    ck_assert_int_eq(strcmp(res->body, ""), 0 );
+    printf("Getting CWD\n");
+    char* buffer = GET_CWD();
+    printf("%s\n", buffer);
+    ck_assert_int_ne(strncmp("-1", buffer, strlen("-1")), 0);
+    printf("------------------------------\n");
+}
+END_TEST
 
-    SET_RESPONSE_BODY(res, "TEST");
-    ck_assert_int_eq(strcmp(res->body, "TEST"), 0 );
-	
-    FREE_RESPONSE(res);
+/**
+ * @brief List files LS
+ */
+START_TEST (list_files)
+{
+    printf("Listing files\n");
+    DIRECTORYLIST *dlist = LIST_FILES("./");
+    PRINT_DIRECTORY_LIST(dlist);
     printf("------------------------------\n");
 }
 END_TEST
@@ -54,20 +61,21 @@ END_TEST
  * 
  * @return Suite* 
  */
-Suite *response_suite(void)
+Suite *fs_suite(void)
 {
     //Declare Suite and TCase pointer
     Suite *s;
-    TCase *tc_response;
+    TCase *tc_fs;
 
     //Create a suite and tcase
-    s = suite_create("RESPONSE");
-    tc_response = tcase_create("Responses");
+    s = suite_create("FS");
+    tc_fs = tcase_create("FS");
     
     //Add our test to the tcase and add the test case to the suite.
-    tcase_add_test(tc_response, create_response);
-    tcase_add_test(tc_response, update_response);
-    suite_add_tcase(s, tc_response);
+    tcase_add_test(tc_fs, read_file);
+    tcase_add_test(tc_fs, get_cwd);
+    tcase_add_test(tc_fs, list_files);
+    suite_add_tcase(s, tc_fs);
 
     return s;
 }
@@ -85,7 +93,7 @@ int main(void){
     SRunner *runner;
 
     //Set s to http_suite
-    s = response_suite();
+    s = fs_suite();
 
     //Build our runner from s
     runner = srunner_create(s);

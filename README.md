@@ -1,9 +1,17 @@
 # WebC
 ## General Overview
 
-WebC is a lightweight modernization framework for C targetted at web development. WebC enables developers to build modernized C applications geared toward web systems. The framework is being designed to be very compatible with WebAssembly or Server Side Applications.
+WebC is a lightweight modernization framework for C targetted at web development. WebC enables developers to build modernized C applications geared toward web systems. The framework is being designed to be compatible with WebAssembly or native applications on servers.
 
-## Environment
+In this effort there are two main build targets *server* and *client*. 
+
+### Server
+Server builds to the local target. This relies on Linux libraries and is currently not supported for windows(that is coming....I promise).
+
+### Client
+Client builds to WASM and and JS. 
+
+## Server Environment
 WebC is currently only ported for Linux. Any ports to other environments are welcome.
 
 WebC requires the following packages:
@@ -13,14 +21,17 @@ libcheck (Unit Testing)
 ## Building
 
 ## Development
-### Required Packages
+### Required Packages For Server
 - libcheck
 - libcurl
 
-### Tests
+### Required Packages For Client
+- emscripten
+
+### Build Webc Server
 From the root directory 
 ```
-make test
+make server
 ```
 
 To clean up
@@ -28,10 +39,21 @@ To clean up
 make clean
 ```
 
-### Build Library
+### Build Webc client
 From the root directory 
 ```
-make all
+make client
+```
+
+To clean up
+```
+make clean
+```
+
+### Tests(Server Only)
+From the root directory 
+```
+make testserver
 ```
 
 To clean up
