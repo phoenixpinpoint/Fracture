@@ -37,7 +37,7 @@ endif
 ###########################################################
 server: 
 	mkdir build
-	cd ./src/http; gcc -D SERVER -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
+	cd ./src; gcc -D SERVER -c ./webc.c -o ../build/webc.o;
 
 headers:
 	mkdir build
@@ -51,7 +51,7 @@ response:
 	mkdir build
 	cd ./src/http; gcc -D SERVER -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o;
 
-client:
+httpclient:
 	mkdir build
 	cd ./src/http; gcc -D SERVER -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
 
@@ -66,6 +66,9 @@ regex:
 debug:
 	mkdir build
 	cd ./src/http; gcc -g -D SERVER -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
+
+client:
+	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 --embed-file assets ./src/webc.c ./app.c -o app
 
 clean: 
 	rm -rf ./build
@@ -82,11 +85,11 @@ clean:
 ###########################################################
 testserver: server; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
-	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
+	gcc ./build/webc.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; gcc -c ../headers.c
-	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
+	gcc ./build/webc.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
 	cd ./tests/build; gcc -D SERVER -c ../client.c
-	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
+	gcc ./build/webc.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; ./request; ./headers; ./client;
 
 leaktestserver: server; mkdir ./tests/build
@@ -128,12 +131,12 @@ leaktestheaders: headers; mkdir ./tests/build
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
 	cd ./tests/build; valgrind ./headers;
 
-testclient: client; mkdir ./tests/build
+testhttpclient: httpclient; mkdir ./tests/build
 	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; ./client;
 
-leaktestclient: client; mkdir ./tests/build
+leaktesthttpclient: httpclient; mkdir ./tests/build
 	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; valgrind --leak-check=full --suppressions=../../valgrind-ignore.txt ./client;
@@ -148,18 +151,15 @@ testregex: regex; mkdir ./tests/build
 	gcc ./build/regex.o ./tests/build/regex.o $(CFLAGS) -o ./tests/build/regex
 	cd ./tests/build; ./regex;
 
-debugclient: debug; mkdir ./debugs/build
-	cd ./debugs/build; gcc -D SERVER -g -c ../client.c
-	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./debugs/build/client.o $(CFLAGS) -o ./debugs/build/client
-	cd ./debugs/build; gdb ./client;
+# debugclient: debug; mkdir ./debugs/build
+# 	cd ./debugs/build; gcc -D SERVER -g -c ../client.c
+# 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./debugs/build/client.o $(CFLAGS) -o ./debugs/build/client
+# 	cd ./debugs/build; gdb ./client;
 
-DEBUG_TEST:
-	mkdir build
-	cd ./src/http; gcc -c ./client.c -o ../../build/http.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
-	mkdir ./tests/build
-	cd ./tests/build; gcc -g -c ../check_http.c
-	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
-	cd ./tests/build; gdb ./check_http
-
-dev:
-	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 --embed-file assets ./src/webc.c ./app.c -o app
+# DEBUG_TEST:
+# 	mkdir build
+# 	cd ./src/http; gcc -c ./client.c -o ../../build/http.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
+# 	mkdir ./tests/build
+# 	cd ./tests/build; gcc -g -c ../check_http.c
+# 	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
+# 	cd ./tests/build; gdb ./check_http

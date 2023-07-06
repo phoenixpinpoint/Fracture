@@ -15,6 +15,8 @@
 
 #include "client.h"
 
+
+#ifdef SERVER
 // Setup Client cURL.
 CURL *curl;
 
@@ -183,7 +185,7 @@ int HTTP_GET_MAX_REDIRECTS()
 
 /**
  * @brief CURL_GET
- * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
+ * CURL_GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
 RESPONSE* CURL_GET(REQUEST* req)
@@ -263,14 +265,26 @@ RESPONSE* CURL_GET(REQUEST* req)
     return res;
   }
 }
+#endif
 
-#ifdef EMSCRIPTEN
+#ifdef CLIENT
+/**
+ * @brief JS_FETCH
+ * JS_FETCH calls JS fetch() API for GET requests
+ * @return RESPONSE 
+ */
 EM_ASYNC_JS(char*, JS_FETCH, (char *url), {
   let value = await fetch(UTF8ToString(url), {});
   value = await value.text();
   return allocate(intArrayFromString(value),ALLOC_NORMAL);
 });
 
+
+/**
+ * @brief JS_GET
+ * JS_GET is a wrapper function to call the JS_FETCH function
+ * @return RESPONSE 
+ */
 RESPONSE* JS_GET(REQUEST* req)
 {
   RESPONSE *fetchRes = CREATE_RESPONSE(0,"",0);

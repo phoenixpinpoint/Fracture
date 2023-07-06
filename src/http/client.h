@@ -24,23 +24,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include <curl/curl.h>
-
-#if !defined(SERVER) && !defined(CLIENT)
-#error either SERVER or CLIENT must be defined.
-#endif
-
-#if defined(SERVER) && defined(CLIENT)
-#error only SERVER or CLIENT can be defined not both.
-#endif
-
-
 #ifdef SERVER
-  #define GET CURL_GET
+    #include <curl/curl.h>
+    #define GET CURL_GET
 #endif
 
 #ifdef CLIENT
-  #define GET JS_GET
+    #define GET JS_GET
 #endif
 
 
@@ -83,13 +73,23 @@ int HTTP_GET_MAX_REDIRECTS();
 
 /**
  * @brief CURL_GET
- * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
+ * CURL_GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
 RESPONSE* CURL_GET(REQUEST*);
 
+/**
+ * @brief JS_FETCH
+ * JS_FETCH calls JS fetch() API for GET requests
+ * @return RESPONSE 
+ */
 char* JS_FETCH(char *url);
 
+/**
+ * @brief JS_GET
+ * JS_GET is a wrapper function to call the JS_FETCH function
+ * @return RESPONSE 
+ */
 RESPONSE* JS_GET(REQUEST* req);
 
 #endif
