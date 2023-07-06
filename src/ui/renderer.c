@@ -32,3 +32,20 @@ DIRECTORYLIST* GET_ASSET_FILES()
     DIRECTORYLIST* assets = LIST_FILES("/assets");
     return assets;
 }
+
+void RENDER()
+{
+    //DIRECTORYLIST* assets = GET_ASSET_FILES();
+    char* layout = READ_FILE("assets/layouts/layout.bk.html");
+    REGEX_MATCHES head = BK_PARSE_FILE(layout, "@head\n(.*?)\n@headclose");
+    if(head.count > 1)
+    {
+        SET_HEAD_INNER_HTML(head.strings[1]);
+    }
+
+    REGEX_MATCHES body = BK_PARSE_FILE(layout,"@body\n(.*?)\n@bodyclose");
+    if(body.count > 1)
+    {
+        SET_BODY_INNER_HTML(body.strings[1]);
+    }
+}
