@@ -32,7 +32,7 @@ HEADER* CREATE_HEADER(char* key, char* value)
         instance->key[strlen(instance->key)] = '\0';
     }
     else {
-        return -1;
+        return (HEADER*)-1;
     }
 
     //If Value is a valid value.
@@ -43,7 +43,7 @@ HEADER* CREATE_HEADER(char* key, char* value)
         instance->value[strlen(instance->value)] = '\0';
     }
     else {
-        return -1;
+        return (HEADER*)-1;
     }
 
     //Return the Resulting Pointer

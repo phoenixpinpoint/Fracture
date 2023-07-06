@@ -71,6 +71,8 @@ clean:
 	rm -rf ./build
 	rm -rf ./tests/build
 	rm -rf ./debugs/build
+	rm -rf ./app
+	rm -rf ./app.wasm
 
 
 ########################################################### 
@@ -161,3 +163,5 @@ DEBUG_TEST:
 
 
 
+dev:
+	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 ./src/http/headers.c ./src/http/request.c ./src/http/response.c ./src/utils/fs.c ./src/utils/regex.c ./app.c -o app
