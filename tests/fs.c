@@ -45,6 +45,18 @@ START_TEST (get_cwd)
 END_TEST
 
 /**
+ * @brief List files LS
+ */
+START_TEST (list_files)
+{
+    printf("Listing files\n");
+    DIRECTORYLIST *dlist = LIST_FILES("./");
+    PRINT_DIRECTORY_LIST(dlist);
+    printf("------------------------------\n");
+}
+END_TEST
+
+/**
  * @brief build a http_suite Suite struct
  * 
  * @return Suite* 
@@ -62,6 +74,7 @@ Suite *fs_suite(void)
     //Add our test to the tcase and add the test case to the suite.
     tcase_add_test(tc_fs, read_file);
     tcase_add_test(tc_fs, get_cwd);
+    tcase_add_test(tc_fs, list_files);
     suite_add_tcase(s, tc_fs);
 
     return s;
