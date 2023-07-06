@@ -12,8 +12,8 @@
  * 
  */
 
-#ifndef fs_H
-#define fs_H
+#ifndef FS_H
+#define FS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,11 +81,11 @@ void ADD_DIRECTORY(DIRECTORYLIST *list, struct dirent *directory);
  */
 struct dirent* GET_DIRECTORY(DIRECTORYLIST *list, int index);
 
-#endif
-
 /**
  * @brief Prints out the Directory List
  * 
  * @param list 
  */
 void PRINT_DIRECTORY_LIST(DIRECTORYLIST *list);
+
+#endif

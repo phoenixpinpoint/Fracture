@@ -59,6 +59,10 @@ fs:
 	mkdir build
 	cd ./src/utils; gcc -c ./fs.c -o ../../build/fs.o;
 
+regex: 
+	mkdir build
+	cd ./src/utils; gcc -c ./regex.c -o ../../build/regex.o;
+
 debug:
 	mkdir build
 	cd ./src/http; gcc -g -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
@@ -136,6 +140,11 @@ testfs: fs; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../fs.c
 	gcc ./build/fs.o ./tests/build/fs.o $(CFLAGS) -o ./tests/build/fs
 	cd ./tests/build; ./fs;
+
+testregexer: regex; mkdir ./tests/build
+	cd ./tests/build; gcc -c ../regex.c
+	gcc ./build/regex.o ./tests/build/regex.o $(CFLAGS) -o ./tests/build/regex
+	cd ./tests/build; ./regex;
 
 debugclient: debug; mkdir ./debugs/build
 	cd ./debugs/build; gcc -g -c ../client.c
