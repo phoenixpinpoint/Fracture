@@ -30,6 +30,7 @@
 #endif
 
 #ifdef CLIENT
+    #include <emscripten.h>
     #define GET JS_GET
 #endif
 
