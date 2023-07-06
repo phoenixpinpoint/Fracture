@@ -169,7 +169,7 @@ struct dirent* GET_DIRECTORY(DIRECTORYLIST *list, int index)
 void PRINT_DIRECTORY_LIST(DIRECTORYLIST *list)
 {
     printf("PRINT_DIRECTORY_LIST\n====================\n");
-    for (int iteration = 0; iteration < list->length-1; iteration++)
+    for (int iteration = 0; iteration < list->length; iteration++)
     {
         printf("Index:%d, Value:*%s*\n", iteration, list->directories[iteration]->d_name);
     }

@@ -21,3 +21,14 @@ EM_JS(void, SET_BODY_INNER_HTML, (char* body), {
     document.body.innerHTML = UTF8ToString(body);
     return;
 });
+
+EM_JS(void, SET_HEAD_INNER_HTML, (char* body), {
+    document.head.innerHTML = UTF8ToString(body);
+    return;
+});
+
+DIRECTORYLIST* GET_ASSET_FILES()
+{
+    DIRECTORYLIST* assets = LIST_FILES("/assets");
+    return assets;
+}
