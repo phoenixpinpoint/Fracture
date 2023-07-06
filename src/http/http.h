@@ -15,7 +15,9 @@
 #ifndef HTTP_H
 #define HTTP_H
 
-// Client Header
-#include "client/client.h"
+//#include "client.h"
+#include "headers.h"
+#include "request.h"
+#include "response.h"
 
 #endif

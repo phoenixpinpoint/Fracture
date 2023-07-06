@@ -161,7 +161,5 @@ DEBUG_TEST:
 	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
 	cd ./tests/build; gdb ./check_http
 
-
-
 dev:
-	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 ./src/http/headers.c ./src/http/request.c ./src/http/response.c ./src/utils/fs.c ./src/utils/regex.c ./app.c -o app
+	emcc -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 ./src/webc.c ./app.c -o app
