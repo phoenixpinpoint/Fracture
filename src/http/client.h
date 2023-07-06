@@ -19,7 +19,30 @@
 #include "response.h"
 #include "headers.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <curl/curl.h>
+
+#if !defined(SERVER) && !defined(CLIENT)
+#error either SERVER or CLIENT must be defined.
+#endif
+
+#if defined(SERVER) && defined(CLIENT)
+#error only SERVER or CLIENT can be defined not both.
+#endif
+
+
+#ifdef SERVER
+  #define GET CURL_GET
+#endif
+
+#ifdef CLIENT
+  #define GET JS_GET
+#endif
+
 
 /**
  * @brief HTTP_CLIENT_INIT()
@@ -59,10 +82,14 @@ void HTTP_SET_MAX_REDIRECTS(int);
 int HTTP_GET_MAX_REDIRECTS();
 
 /**
- * @brief GET
+ * @brief CURL_GET
  * GET calls the cURL lib with a REQUEST structure and returns a RESPONSE structure
  * @return RESPONSE 
  */
-RESPONSE* GET(REQUEST*);
+RESPONSE* CURL_GET(REQUEST*);
+
+char* JS_FETCH(char *url);
+
+RESPONSE* JS_GET(REQUEST* req);
 
 #endif

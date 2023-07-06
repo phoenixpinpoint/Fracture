@@ -35,37 +35,37 @@ endif
 # 
 # Below are the builds for the library
 ###########################################################
-all: 
+server: 
 	mkdir build
-	cd ./src/http; gcc -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
+	cd ./src/http; gcc -D SERVER -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
 
 headers:
 	mkdir build
-	cd ./src/http; gcc -c ./headers.c -o ../../build/headers.o;
+	cd ./src/http; gcc -D SERVER -c ./headers.c -o ../../build/headers.o;
 
 request: 
 	mkdir build
-	cd ./src/http; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./request.c -o ../../build/request.o
+	cd ./src/http; gcc -D SERVER -c ./headers.c -o ../../build/headers.o; gcc -c ./request.c -o ../../build/request.o
 
 response:
 	mkdir build
-	cd ./src/http; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o;
+	cd ./src/http; gcc -D SERVER -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o;
 
 client:
 	mkdir build
-	cd ./src/http; gcc -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
+	cd ./src/http; gcc -D SERVER -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
 
 fs:
 	mkdir build
-	cd ./src/utils; gcc -c ./fs.c -o ../../build/fs.o;
+	cd ./src/utils; gcc -D SERVER -c ./fs.c -o ../../build/fs.o;
 
 regex: 
 	mkdir build
-	cd ./src/utils; gcc -c ./regex.c -o ../../build/regex.o;
+	cd ./src/utils; gcc -D SERVER -c ./regex.c -o ../../build/regex.o;
 
 debug:
 	mkdir build
-	cd ./src/http; gcc -g -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
+	cd ./src/http; gcc -g -D SERVER -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
 
 clean: 
 	rm -rf ./build
@@ -80,21 +80,21 @@ clean:
 # 
 # Below are the builds for Unit testing.
 ###########################################################
-test: all; mkdir ./tests/build
+testserver: server; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
-	cd ./tests/build; gcc -c ../client.c
+	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; ./request; ./headers; ./client;
 
-leaktest: all; mkdir ./tests/build
+leaktestserver: server; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../request.c
 	gcc ./build/request.o ./tests/build/request.o $(CFLAGS) -o ./tests/build/request
 	cd ./tests/build; gcc -c ../headers.c
 	gcc ./build/headers.o ./tests/build/headers.o $(CFLAGS) -o ./tests/build/headers
-	cd ./tests/build; gcc -c ../client.c
+	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; valgrind ./request; valgrind ./headers; valgrind ./client;
 
@@ -129,12 +129,12 @@ leaktestheaders: headers; mkdir ./tests/build
 	cd ./tests/build; valgrind ./headers;
 
 testclient: client; mkdir ./tests/build
-	cd ./tests/build; gcc -c ../client.c
+	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; ./client;
 
 leaktestclient: client; mkdir ./tests/build
-	cd ./tests/build; gcc -c ../client.c
+	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; valgrind --leak-check=full --suppressions=../../valgrind-ignore.txt ./client;
 
@@ -143,13 +143,13 @@ testfs: fs; mkdir ./tests/build
 	gcc ./build/fs.o ./tests/build/fs.o $(CFLAGS) -o ./tests/build/fs
 	cd ./tests/build; ./fs;
 
-testregexer: regex; mkdir ./tests/build
+testregex: regex; mkdir ./tests/build
 	cd ./tests/build; gcc -c ../regex.c
 	gcc ./build/regex.o ./tests/build/regex.o $(CFLAGS) -o ./tests/build/regex
 	cd ./tests/build; ./regex;
 
 debugclient: debug; mkdir ./debugs/build
-	cd ./debugs/build; gcc -g -c ../client.c
+	cd ./debugs/build; gcc -D SERVER -g -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./debugs/build/client.o $(CFLAGS) -o ./debugs/build/client
 	cd ./debugs/build; gdb ./client;
 
