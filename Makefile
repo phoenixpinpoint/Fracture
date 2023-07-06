@@ -68,7 +68,7 @@ debug:
 	cd ./src/http; gcc -g -D SERVER -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
 
 client:
-	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 --embed-file assets ./src/webc.c ./app.c -o app
+	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 -s ASYNCIFY -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE='$$allocate','$$intArrayFromString' --embed-file assets ./src/webc.c ./app.c -o app
 
 clean: 
 	rm -rf ./build
