@@ -18,3 +18,10 @@ Makefile~
 # WebC
 app
 app.wasm
+
+# Tailwinds/NPM
+node_modules
+app-ts.css
+
+# Clibs
+deps
