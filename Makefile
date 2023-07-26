@@ -55,21 +55,14 @@ httpclient:
 	mkdir build
 	cd ./src/http; gcc -D SERVER -c ./client.c -o ../../build/client.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
 
-fs:
-	mkdir build
-	cd ./src/utils; gcc -D SERVER -c ./fs.c -o ../../build/fs.o;
-
-regex: 
-	mkdir build
-	cd ./src/utils; gcc -D SERVER -c ./regex.c -o ../../build/regex.o;
-
 debug:
 	mkdir build
 	cd ./src/http; gcc -g -D SERVER -c ./client.c -o ../../build/http.o; gcc -g -c ./headers.c -o ../../build/headers.o; gcc -g -c ./response.c -o ../../build/response.o; gcc -g -c ./request.c -o ../../build/request.o
 
 client:
-	npx tailwindcss -i ./assets/stylesheets/app.css -o ./assets/stylesheets/app-ts.css
-	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 -s ASYNCIFY -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE='$$allocate','$$intArrayFromString' --embed-file assets ./src/webc.c ./deps/buffer/buffer.c ./deps/md4c/md4c.c ./deps/md4c/entity.c ./deps/md4c/md4c-html.c ./app.c -o app
+#	npx tailwindcss -i ./assets/stylesheets/app.css -o ./assets/stylesheets/app-ts.css
+#	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 -s ASYNCIFY -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE='$$allocate','$$intArrayFromString' --embed-file assets ./src/webc.c ./deps/buffer/buffer.c ./deps/md4c/md4c.c ./deps/md4c/entity.c ./deps/md4c/md4c-html.c ./app.c -o app
+	emcc -D CLIENT -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s LINKABLE=1 -s EXPORT_ALL=1 -s ASYNCIFY -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE='$$allocate','$$intArrayFromString' --embed-file assets ./src/webc.c ./app.c -o app
 
 clean: 
 	rm -rf ./build
@@ -141,26 +134,3 @@ leaktesthttpclient: httpclient; mkdir ./tests/build
 	cd ./tests/build; gcc -D SERVER -c ../client.c
 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./tests/build/client.o $(CFLAGS) -o ./tests/build/client
 	cd ./tests/build; valgrind --leak-check=full --suppressions=../../valgrind-ignore.txt ./client;
-
-testfs: fs; mkdir ./tests/build
-	cd ./tests/build; gcc -c ../fs.c
-	gcc ./build/fs.o ./tests/build/fs.o $(CFLAGS) -o ./tests/build/fs
-	cd ./tests/build; ./fs;
-
-testregex: regex; mkdir ./tests/build
-	cd ./tests/build; gcc -c ../regex.c
-	gcc ./build/regex.o ./tests/build/regex.o $(CFLAGS) -o ./tests/build/regex
-	cd ./tests/build; ./regex;
-
-# debugclient: debug; mkdir ./debugs/build
-# 	cd ./debugs/build; gcc -D SERVER -g -c ../client.c
-# 	gcc ./build/client.o ./build/headers.o ./build/request.o ./build/response.o ./debugs/build/client.o $(CFLAGS) -o ./debugs/build/client
-# 	cd ./debugs/build; gdb ./client;
-
-# DEBUG_TEST:
-# 	mkdir build
-# 	cd ./src/http; gcc -c ./client.c -o ../../build/http.o; gcc -c ./headers.c -o ../../build/headers.o; gcc -c ./response.c -o ../../build/response.o; gcc -c ./request.c -o ../../build/request.o
-# 	mkdir ./tests/build
-# 	cd ./tests/build; gcc -g -c ../check_http.c
-# 	gcc ./build/http.o ./build/headers.o ./build/response.o ./tests/build/check_http.o $(CFLAGS) -o ./tests/build/check_http
-# 	cd ./tests/build; gdb ./check_http
