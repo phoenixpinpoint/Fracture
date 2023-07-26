@@ -1,9 +1,5 @@
 
 #include "src/webc.h"
-#include "deps/buffer/buffer.h"
-#include "deps/md4c/entity.h"
-#include "deps/md4c/md4c.h"
-#include "deps/md4c/md4c-html.h"
 #include <emscripten.h>
 
 void quote()
@@ -23,14 +19,11 @@ void quote()
 
 int main()
 {
-    printf("Loading Asset Files\n");
-    DIRECTORYLIST* assets = GET_ASSET_FILES();
-
     printf("Rendering home Page\n");
-    RENDER_PAGE("assets/pages/home.bk.html");
+    wc_render_page("assets/pages/home.bk.html");
 
     printf("Loading Scripts\n");
-    ADD_SCRIPTS();
+    //ADD_SCRIPTS();
 
     quote();
 
