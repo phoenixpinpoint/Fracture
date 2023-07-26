@@ -7,7 +7,6 @@
     "license": "MIT",
     "dependencies": {
         "clibs/buffer": "*",
-        "phoenixpinpoint/md4c-clib": "*",
         "phoenixpinpoint/butterknife": "*"
     },
     "src": [
