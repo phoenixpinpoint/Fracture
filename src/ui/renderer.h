@@ -14,9 +14,7 @@
 #define RENDERER_H
 
 #include <emscripten.h>
-#include "../utils/fs.h"
-#include "../utils/regex.h"
-#include "butterknife.h"
+#include "../../deps/butterknife/butterknife.h"
 
 void SET_BODY_INNER_HTML(char* body);
 
@@ -26,9 +24,9 @@ void ADD_SCRIPT_TO_HEAD(char* script);
 
 void SET_INNER_HTML_BY_ID(char* id, char* body);
 
-DIRECTORYLIST* GET_ASSET_FILES();
+void wc_write_document(char* page);
 
-void RENDER_PAGE();
+void wc_render_page(char* page);
 
 void ADD_SCRIPTS();
 

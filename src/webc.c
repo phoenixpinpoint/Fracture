@@ -14,7 +14,12 @@
 
 //Standard includes
 #include "http/http.c"
-#include "utils/utils.c"
+#include "../deps/buffer/buffer.c"
+#include "../deps/butterknife/butterknife.c"
+#include "../deps/cwalk/cwalk.c"
+#include "../deps/fs/fs.c"
+#include "../deps/tiny-regex-c/re.c"
+#include "../deps/vec/vec.c"
 
 //Client specific includes
 #ifdef CLIENT

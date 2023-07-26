@@ -1,0 +1,16 @@
+{
+    "name": "WebC",
+    "version": "0.1.0",
+    "repo": "phoenixpinpoint/WebC",
+    "description": "Web Development Framework for WASM and C",
+    "keywords": ["Web Development", "WebAssembly", "WASM"],
+    "license": "MIT",
+    "dependencies": {
+        "clibs/buffer": "*",
+        "kgabis/parson": "*",
+        "phoenixpinpoint/butterknife": "*"
+    },
+    "src": [
+        "app.c"
+    ]
+  }
