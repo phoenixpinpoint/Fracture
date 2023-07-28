@@ -11,6 +11,6 @@
         "phoenixpinpoint/butterknife": "*"
     },
     "src": [
-        "app.c"
+        "*"
     ]
   }
