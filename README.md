@@ -1,65 +1,37 @@
-# WebC
+# Fracture
 ## General Overview
 
-WebC is a lightweight modernization framework for C targetted at web development. WebC enables developers to build modernized C applications geared toward web systems. The framework is being designed to be compatible with WebAssembly or native applications on servers.
+Fracture is a lightweight modernization framework for C targeted at web development. Fracture enables developers to build modernized C applications geared toward web systems. The framework is designed to be compatible with WebAssembly or Javascript applications.
 
-In this effort there are two main build targets *server* and *client*. 
+Fracture can be used in conjuction with Kore (https://kore.io/) to build robust C frontend and backend applications.
 
-### Server
-Server builds to the local target. This relies on Linux libraries and is currently not supported for windows(that is coming....I promise).
+WASI (https://github.com/WebAssembly/WASI) server side bindings are planned and we would love to have contributions for a WASI server.
 
-### Client
-Client builds to WASM and and JS. 
+## Setup & Building
+### Dependencies
+- emscripten (https://emscripten.org/) - Used to compile to WASM/JS
+- clib (https://github.com/clibs/clib) - Used to install the clibs.json dependencies
+- NPM/Node.js (https://www.npmjs.com/ & https://nodejs.org/en)
+- Tailwind CSS (https://tailwindcss.com/docs/installation)
 
-## Server Environment
-WebC is currently only ported for Linux. Any ports to other environments are welcome.
+### Installation Steps
+Follow each dependencies directions:
+1) Install Emscripten
+2) Install Clibs
+3) Install Node.js
+4) Install NPM
+5) Install Taildwind CSS
 
-WebC requires the following packages:
-libcurl (Tested with OpenSSL version)
-libcheck (Unit Testing)
-
-## Building
-
-## Development
-### Required Packages For Server
-- libcheck
-- libcurl
-
-### Required Packages For Client
-- emscripten
-
-### Build Webc Server
-From the root directory 
-```
-make server
-```
-
-To clean up
-```
-make clean
-```
 
 ### Build Webc client
-From the root directory 
+From the root directory
 ```
-make client
-```
-
-To clean up
-```
-make clean
-```
-
-### Tests(Server Only)
-From the root directory 
-```
-make testserver
+make all
 ```
 
 To clean up
 ```
 make clean
 ```
-
 ## Contributing
 To contribute please fork a copy of the repo make changes and open a Pull Request. Any and all Pull Request will be reviewed and either added or discussed.
