@@ -1,9 +1,9 @@
 {
-    "name": "WebC",
+    "name": "Fracture",
     "version": "0.1.1",
-    "repo": "phoenixpinpoint/WebC",
-    "description": "Web Development Framework for WASM and C",
-    "keywords": ["Web Development", "WebAssembly", "WASM"],
+    "repo": "phoenixpinpoint/Fracture",
+    "description": "Fracture provides a robust set of tools for developing web applications in C. Build to JS or WASM",
+    "keywords": ["Web Development", "WebAssembly", "WASM", "Javascript", "c", "js"],
     "license": "MIT",
     "dependencies": {
         "clibs/buffer": "*",
@@ -13,6 +13,5 @@
     },
     "src": [
         "src/*",
-        "test/*"
     ]
   }
