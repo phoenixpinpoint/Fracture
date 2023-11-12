@@ -17,3 +17,5 @@
 #include <parson/parson.c>
 #include <fido/fido.c>
 #include <buffer/buffer.c>
+
+#include "ui/renderer.c"
