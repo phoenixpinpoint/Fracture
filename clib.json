@@ -12,6 +12,6 @@
         "phoenixpinpoint/butterknife": "*"
     },
     "src": [
-        "src/*",
+        "src/*"
     ]
   }
