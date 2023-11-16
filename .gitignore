@@ -25,3 +25,13 @@ app-ts.css
 
 # Clibs
 deps
+
+# Kore
+*.o
+.flavor
+.objs
+Fracture.so
+assets.h
+cert
+bin/*
+kore.pid
