@@ -17,6 +17,46 @@ EM_JS(void, FRACTURE_WRITE_DOCUMENT, (char* page), {
     return;
 });
 
+EM_JS(void, FRACTURE_APPEND_CHILD, (char* id, char* elementId), {
+    let child = document.getElementById(UTF8ToString(id));
+    let parent = document.getElementById(UTF8ToString(elementId));
+    if(child && parent)
+    {
+      parent.appendChild(child);
+    }
+    else {
+      console.log("FRACTURE_APPEND_CHILD FAILED.");
+    }
+    return;
+});
+
+EM_ASYNC_JS(void, FRACTURE_APPEND_BODY, (char *elementJson), {
+    let parsedElement;
+    try {
+        parsedElement = await JSON.parse(UTF8ToString(elementJson));
+    } catch {
+      console.log("Element failed to parse.");
+    }
+
+    console.log(parsedElement);
+
+    if(!parsedElement.tagName)
+    {
+      console.log("Tag Specification Missing.");
+    }
+
+    let element = document.createElement(parsedElement.tagName);
+
+    if(parsedElement.id)
+    {
+      element.id = parsedElement.id;
+    }
+
+    document.body.appendChild(element);
+
+    return;
+});
+
 // EM_JS(void, SET_INNER_HTML_BY_ID, (char* id, char* body), {
 //     document.getElementById(UTF8ToString(id)).innerHTML = UTF8ToString(body);
 //     return;

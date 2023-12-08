@@ -13,11 +13,18 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "element.h"
+
 #include <emscripten.h>
 #include <butterknife/butterknife.h>
 
 void FRACTURE_WRITE_DOCUMENT(char* page);
 
+void FRACTURE_CREATE_ELEMENT(char* tag, char* id);
+
+void FRACTURE_APPEND_CHILD(char* id, char* elementId);
+
+void FRACTURE_APPEND_BODY(char* element);
 
 // void SET_BODY_INNER_HTML(char* body);
 //
