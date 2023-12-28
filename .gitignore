@@ -35,3 +35,6 @@ assets.h
 cert
 bin/*
 kore.pid
+
+# Surveyor
+surveyor

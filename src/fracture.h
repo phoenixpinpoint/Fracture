@@ -15,7 +15,7 @@
 //Dependencies Includes
 #include <emscripten.h>
 #include <buffer/buffer.h>
-#include <cwalk/cwalk.h>
+#include <cwalk.h>
 #include <fs/fs.h>
 #include <tiny-regex-c/re.h>
 #include <vec/vec.h>

@@ -14,12 +14,6 @@
 
 #include "fracture.h"
 
-//General dependencies
-#include <parson/parson.c>
-#include <fido/fido.c>
-#include <buffer/buffer.c>
-//#include <butterknife/butterknife.c>
-
 //UI
 #include "ui/renderer.c"
 #include "ui/element.c"
