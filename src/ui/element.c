@@ -13,8 +13,28 @@ FRACTURE_HTML_ELEMENT* FRACTURE_CREATE_HTML_ELEMENT()
   return element;//Return our uninitialized element.
 }
 
+//Add an attribute to an HTML Element
+FRACTURE_HTML_ELEMENT* FRACTURE_ADD_ATTRIBUTE(FRACTURE_HTML_ELEMENT* element, FRACTURE_HTML_ATTRIBUTE* attribute)
+{
+  //If this is the first attribute
+  if(element->attributeCount == 0)
+  {
+    element->attributeCount = 1;//Set the attributeCount to 1
+    element->attributes = (FRACTURE_HTML_ATTRIBUTE*)malloc(sizeof(FRACTURE_HTML_ATTRIBUTE*));//allocate an new array of attribute pointers
+    element->attributes[0] = attribute;//assign attribute to index 0
+  }
+  //If this is NOT the first attribute
+  else {
+    int newAttributeIndex= element->attributeCount;//Use the previous attribute count as the new index
+    element->attributeCount++;//Increment the attributeCount
+    element->attributes = realloc(element->attributes, element->attributeCount*sizeof(FRACTURE_HTML_ATTRIBUTE*));//Re-allocate the attributes array.
+    element->attributes[newAttributeIndex] = attribute;//Set the last element in the array equal to the new attribute
+  }
+  return element;
+}
+
 //Add an attribute key value to an HTML Element
-FRACTURE_HTML_ELEMENT* FRACTURE_ADD_ATTRIBUTE(FRACTURE_HTML_ELEMENT* element, char* key, char* value)
+FRACTURE_HTML_ELEMENT* FRACTURE_ADD_NEW_ATTRIBUTE(FRACTURE_HTML_ELEMENT* element, char* key, char* value)
 {
   //Create a new HTML Attribute
   FRACTURE_HTML_ATTRIBUTE* attribute = FRACTURE_CREATE_ATTRIBUTE(key, value);
@@ -56,6 +76,18 @@ FRACTURE_HTML_ATTRIBUTE* FRACTURE_CREATE_ATTRIBUTE(char* key, char* value)
 char* FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(FRACTURE_HTML_ELEMENT* element)
 {
   JSON_Value *elementValue = json_value_init_object();
-  JSON_Object *elementObject = json_value_get_object(elementObject);
+  JSON_Object *elementObject = json_value_get_object(elementValue);
   char* serializedObject = NULL;
+  
+  for (int attribute = 0; attribute < element->attributeCount; attribute++)
+  {
+    json_object_set_string(elementObject, element->attributes[attribute]->key->data, element->attributes[attribute]->value->data);
+  }
+
+  serializedObject = json_serialize_to_string(elementValue);
+
+  json_free_serialized_string(serializedObject);
+  json_value_free(elementValue);
+
+  return serializedObject;
 }

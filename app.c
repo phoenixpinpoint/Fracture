@@ -45,7 +45,7 @@ buffer_t* quote()
           json_value_free(quoteRoot);
       }
       else {//If the JSON Parse fails.
-          printf("failed to parse quote response.\n");
+        printf("failed to parse quote response.\n");
       }
     }
     else {//If not 200 OK
@@ -67,35 +67,48 @@ buffer_t* quote()
 // This will be called on every page load wth bin/app.js included
 int main()
 {
+    //fido call. 
     //Call our quote function.
     buffer_t *quoteBuffer = quote();
     printf("%s\n", quoteBuffer->data);
     buffer_free(quoteBuffer);
 
-    FRACTURE_HTML_ELEMENT* myDiv = FRACTURE_CREATE_HTML_ELEMENT();
-    myDiv = FRACTURE_ADD_ATTRIBUTE(myDiv, "tagName", "div");
-    myDiv = FRACTURE_ADD_ATTRIBUTE(myDiv, "id", "myDiv");
+    //Server Side Rendering
+    //LOAD KORE
 
-    printf("myDiv AttribCount = %d\n", myDiv->attributeCount);
+
+    //Client Side Rendering
+    // buffer_t* webPageText = bk_generate_webpage("./assets/app.html");
+    // FRACTURE_WRITE_DOCUMENT(webPageText);
+
+    FRACTURE_HTML_ELEMENT* myDiv = FRACTURE_CREATE_HTML_ELEMENT();
+    myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "tagName", "div");
+    myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "id", "myDiv");
+    // myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "innerHTML", "TEST");
+
+    FRACTURE_HTML_ATTRIBUTE* myDivInnerHTML = FRACTURE_CREATE_ATTRIBUTE("innerHTML", "TEST");
+
+    myDiv = FRACTURE_ADD_ATTRIBUTE(myDiv, myDivInnerHTML);
 
     for (int attribute = 0; attribute < myDiv->attributeCount; attribute++)
     {
       printf("ATTR KEY:VALUE %s:%s\n", myDiv->attributes[attribute]->key->data ,myDiv->attributes[attribute]->value->data);
     }
 
-    JSON_Value *element_value = json_value_init_object();
-    JSON_Object *element_object = json_value_get_object(element_value);
-    char* serializedObject = NULL;
+    // JSON_Value *element_value = json_value_init_object();
+    // JSON_Object *element_object = json_value_get_object(element_value);
+    // char* serializedObject = NULL;
 
-    // json_object_set_string(element_object, "tagName", "div");
-    // json_object_set_string(element_object, "id", "someNewId");
-    //
+    // for (int attribute = 0; attribute < myDiv->attributeCount; attribute++)
+    // {
+    //   json_object_set_string(element_object, myDiv->attributes[attribute]->key->data, myDiv->attributes[attribute]->value->data);
+    // }
+    
     // serializedObject = json_serialize_to_string(element_value);
-    //
-    // FRACTURE_APPEND_BODY(serializedObject);
-    //
-    // json_free_serialized_string(serializedObject);
-    // json_value_free(element_value);
+
+    // printf("Element: %s\n", serializedObject);
+    
+    FRACTURE_APPEND_BODY(FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(myDiv));
 
     return 0;
 }

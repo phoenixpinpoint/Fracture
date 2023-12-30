@@ -17,19 +17,51 @@ EM_JS(void, FRACTURE_WRITE_DOCUMENT, (char* page), {
     return;
 });
 
-EM_JS(void, FRACTURE_APPEND_CHILD, (char* id, char* elementId), {
-    let child = document.getElementById(UTF8ToString(id));
-    let parent = document.getElementById(UTF8ToString(elementId));
-    if(child && parent)
-    {
-      parent.appendChild(child);
-    }
-    else {
-      console.log("FRACTURE_APPEND_CHILD FAILED.");
-    }
-    return;
+EM_JS(void, FRACTURE_APPEND_CHILD, (char* parentId, char* childJSON), {
+    // let parent = document.getElementById(UTF8ToString(parentId));
+    
+    // let parsedElement;
+    // try {
+    //     parsedElement = await JSON.parse(UTF8ToString(childJSON));
+    // } catch {
+    //   console.log("Element failed to parse.");
+    // }
+
+    // console.log(parsedElement);
+
+    // if(!parsedElement.tagName)
+    // {
+    //   console.log("Tag Specification Missing.");
+    // }
+
+    // let element = document.createElement(parsedElement.tagName);
+
+    // if(parsedElement.id)
+    // {
+    //   element.id = parsedElement.id;
+    // }
+
+    // if(parsedElement.childCount > 0)
+    // {
+    //   // for(int child = 0; child < parsedElement.childCount; child++)
+    //   // {
+    //   //   try
+    //   // }
+    // }
+
+    // document.body.appendChild(element);
+
+    // if(child && parent)
+    // {
+    //   parent.appendChild(child);
+    // }
+    // else {
+    //   console.log("FRACTURE_APPEND_CHILD FAILED.");
+    // }
+    // return;
 });
 
+//Takes an Element JSON object, creates an HTML Element, appends it to the body Element.
 EM_ASYNC_JS(void, FRACTURE_APPEND_BODY, (char *elementJson), {
     let parsedElement;
     try {
@@ -45,12 +77,47 @@ EM_ASYNC_JS(void, FRACTURE_APPEND_BODY, (char *elementJson), {
       console.log("Tag Specification Missing.");
     }
 
-    let element = document.createElement(parsedElement.tagName);
-
-    if(parsedElement.id)
-    {
-      element.id = parsedElement.id;
+    let atributeList;
+    try {
+      attributeList = Object.keys(parsedElement);
+    } catch {
+      console.log("Element failed to parse correctly.");
     }
+
+    let element = document.createElement(parsedElement.tagName);
+    for (let attribute = 0; attribute < attributeList.length; attribute++)
+    {
+      if (attributeList[attribute] != "tagName")
+      {
+        element[attributeList[attribute]] = parsedElement[attributeList[attribute]];
+      }
+    }
+
+    // if(parsedElement.childCount > 0)
+    // {
+    //   let parsedChild;
+    //   try {
+    //     parsedChild = await JSON.parse(UTF8ToString(elementJson));
+    //   } catch {
+    //     console.log("Element failed to parse.");
+    //   }
+
+    //   console.log(parsedChild);
+
+    //   if(!parsedChild.tagName)
+    //   {
+    //     console.log("Tag Specification Missing.");
+    //   }
+
+    //   let element = document.createElement(parsedChild.tagName);
+
+    //   if(parsedChild.id)
+    //   {
+    //     element.id = parsedChild.id;
+    //   }
+
+    //   element.appendChild()
+    // }
 
     document.body.appendChild(element);
 
