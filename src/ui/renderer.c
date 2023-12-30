@@ -70,56 +70,48 @@ EM_ASYNC_JS(void, FRACTURE_APPEND_BODY, (char *elementJson), {
       console.log("Element failed to parse.");
     }
 
-    console.log(parsedElement);
+    function generateElement(inputElement)
+    {
+      let atributeList;
+      try {
+        attributeList = Object.keys(inputElement);
+      } catch {
+        console.log("Element failed to parse correctly.");
+      }
+
+      let element = document.createElement(inputElement.tagName);
+      for (let attribute = 0; attribute < attributeList.length; attribute++)
+      {
+        if (attributeList[attribute] != "tagName")
+        {
+          element[attributeList[attribute]] = inputElement[attributeList[attribute]];
+        }
+      }
+
+      for (let child = 0 ; child < inputElement.children.length; child++)
+      {
+        if(!inputElement.children[child].tagName)
+        {
+          console.log("Children Tag Specification Missing.");
+        }
+
+        //console.log("Appending child");
+        element.appendChild(generateElement(inputElement.children[child]));        
+      }
+      //console.log("ELEMENT:", element);
+      return element;
+    }
+
+    //console.log(parsedElement);
 
     if(!parsedElement.tagName)
     {
       console.log("Tag Specification Missing.");
     }
 
-    let atributeList;
-    try {
-      attributeList = Object.keys(parsedElement);
-    } catch {
-      console.log("Element failed to parse correctly.");
-    }
+    let renderedElement = generateElement(parsedElement);
 
-    let element = document.createElement(parsedElement.tagName);
-    for (let attribute = 0; attribute < attributeList.length; attribute++)
-    {
-      if (attributeList[attribute] != "tagName")
-      {
-        element[attributeList[attribute]] = parsedElement[attributeList[attribute]];
-      }
-    }
-
-    // if(parsedElement.childCount > 0)
-    // {
-    //   let parsedChild;
-    //   try {
-    //     parsedChild = await JSON.parse(UTF8ToString(elementJson));
-    //   } catch {
-    //     console.log("Element failed to parse.");
-    //   }
-
-    //   console.log(parsedChild);
-
-    //   if(!parsedChild.tagName)
-    //   {
-    //     console.log("Tag Specification Missing.");
-    //   }
-
-    //   let element = document.createElement(parsedChild.tagName);
-
-    //   if(parsedChild.id)
-    //   {
-    //     element.id = parsedChild.id;
-    //   }
-
-    //   element.appendChild()
-    // }
-
-    document.body.appendChild(element);
+    document.body.appendChild(renderedElement);
 
     return;
 });

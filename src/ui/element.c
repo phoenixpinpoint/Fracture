@@ -73,21 +73,80 @@ FRACTURE_HTML_ATTRIBUTE* FRACTURE_CREATE_ATTRIBUTE(char* key, char* value)
   return attribute;
 }
 
+FRACTURE_HTML_ELEMENT* FRACTURE_ADD_CHILD_ELEMENT(FRACTURE_HTML_ELEMENT* element, FRACTURE_HTML_ELEMENT* child)
+{
+  //If this is the first 
+  if(element->childCount == 0)
+  {
+    element->childCount = 1;//Set the childCount to 1
+    element->children = (void*)malloc(sizeof(FRACTURE_HTML_ELEMENT*));//allocate an new array of child element pointers
+    element->children[0] = (void*)child;//assign child to index 0
+  }
+  //If this is NOT the first child
+  else {
+    int newChildIndex= element->childCount;//Use the previous child count as the new index
+    element->childCount++;//Increment the achildCount
+    element->children = realloc(element->children, element->childCount*sizeof(FRACTURE_HTML_ELEMENT*));//Re-allocate the children array.
+    element->children[newChildIndex] = (void*)child;//Set the last element in the array equal to the new chid
+  }
+  return element;
+}
+
+//TODO add JSON_Status checks to our fx calls
 char* FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(FRACTURE_HTML_ELEMENT* element)
+{
+  char* serializedObject = NULL;
+
+  JSON_Value *elementValue = FRACTURE_HTML_ELEMENT_TO_JSON(element);
+
+  serializedObject = json_serialize_to_string(elementValue);
+
+  //json_free_serialized_string(serializedObject);
+  json_value_free(elementValue);
+
+  return serializedObject;
+}
+
+JSON_Value* FRACTURE_HTML_ELEMENT_TO_JSON(FRACTURE_HTML_ELEMENT* element)
 {
   JSON_Value *elementValue = json_value_init_object();
   JSON_Object *elementObject = json_value_get_object(elementValue);
-  char* serializedObject = NULL;
-  
+
+  //Serialize the Attributes
   for (int attribute = 0; attribute < element->attributeCount; attribute++)
   {
     json_object_set_string(elementObject, element->attributes[attribute]->key->data, element->attributes[attribute]->value->data);
   }
 
-  serializedObject = json_serialize_to_string(elementValue);
+  JSON_Value* childrenArrayValue = json_value_init_array();
+  JSON_Array *children = json_value_get_array(childrenArrayValue);
 
-  json_free_serialized_string(serializedObject);
-  json_value_free(elementValue);
+  if(json_type(childrenArrayValue) != 5)
+  {
+    printf("ARRAY CREATION FAILURE.\n");
+    return elementValue;
+  }
 
-  return serializedObject;
+  //Serialize the Children
+  for (int child = 0; child < element->childCount; child++)
+  {
+    JSON_Value *childValue;
+    FRACTURE_HTML_ELEMENT* childAsElement = (FRACTURE_HTML_ELEMENT*)element->children[child]; 
+    // printf("CHILD %d TAG %s\n", child, childAsElement->attributes[0]->value->data);
+    childValue = FRACTURE_HTML_ELEMENT_TO_JSON(childAsElement);
+    JSON_Status arrayStat = json_array_append_value(children, childValue);
+    if (arrayStat == -1)
+    {
+      printf("Array Status Is JSONError.\n");
+      return elementValue;
+    }
+  }
+
+  JSON_Status objectStat = json_object_set_value(elementObject, "children", childrenArrayValue);
+  if (objectStat == -1)
+  {
+    printf("Object Status Is JSONError.\n");
+  }
+
+  return elementValue;
 }
