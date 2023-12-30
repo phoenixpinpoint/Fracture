@@ -84,7 +84,6 @@ int main()
     FRACTURE_HTML_ELEMENT* myDiv = FRACTURE_CREATE_HTML_ELEMENT();
     myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "tagName", "div");
     myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "id", "myDiv");
-    // myDiv = FRACTURE_ADD_NEW_ATTRIBUTE(myDiv, "innerHTML", "TEST");
 
     FRACTURE_HTML_ATTRIBUTE* myDivInnerHTML = FRACTURE_CREATE_ATTRIBUTE("innerHTML", "TEST");
 
@@ -95,19 +94,6 @@ int main()
       printf("ATTR KEY:VALUE %s:%s\n", myDiv->attributes[attribute]->key->data ,myDiv->attributes[attribute]->value->data);
     }
 
-    // JSON_Value *element_value = json_value_init_object();
-    // JSON_Object *element_object = json_value_get_object(element_value);
-    // char* serializedObject = NULL;
-
-    // for (int attribute = 0; attribute < myDiv->attributeCount; attribute++)
-    // {
-    //   json_object_set_string(element_object, myDiv->attributes[attribute]->key->data, myDiv->attributes[attribute]->value->data);
-    // }
-    
-    // serializedObject = json_serialize_to_string(element_value);
-
-    // printf("Element: %s\n", serializedObject);
-    
     FRACTURE_APPEND_BODY(FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(myDiv));
 
     return 0;
