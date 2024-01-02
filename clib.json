@@ -17,7 +17,10 @@
         "src/ui/renderer.c",
         "src/ui/renderer.h",
         "src/fracture.c",
-        "src/fracture.h"
+        "src/fracture.h",
+        "install.sh",
+        "package.json",
+        "tailwinds.config.js"
     ],
     "install": "install.sh"
   }
