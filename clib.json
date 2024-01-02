@@ -12,6 +12,11 @@
         "phoenixpinpoint/butterknife": "*"
     },
     "src": [
-        "src/*"
+        "src/ui/element.c",
+        "src/ui/element.h",
+        "src/ui/renderer.c",
+        "src/ui/renderer.h",
+        "src/fracture.c",
+        "src/fracture.h"
     ]
   }
