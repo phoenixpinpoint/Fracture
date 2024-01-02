@@ -18,5 +18,6 @@
         "src/ui/renderer.h",
         "src/fracture.c",
         "src/fracture.h"
-    ]
+    ],
+    "install": "install.sh"
   }
