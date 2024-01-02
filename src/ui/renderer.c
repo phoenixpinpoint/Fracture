@@ -17,48 +17,103 @@ EM_JS(void, FRACTURE_WRITE_DOCUMENT, (char* page), {
     return;
 });
 
-EM_JS(void, FRACTURE_APPEND_CHILD, (char* parentId, char* childJSON), {
-    // let parent = document.getElementById(UTF8ToString(parentId));
-    
-    // let parsedElement;
-    // try {
-    //     parsedElement = await JSON.parse(UTF8ToString(childJSON));
-    // } catch {
-    //   console.log("Element failed to parse.");
-    // }
+EM_ASYNC_JS(void, FRACTURE_APPEND_CHILD, (char* parentId, char* elementJson), {
+    let parent = document.getElementById(UTF8ToString(parentId));
+    if (parent == undefined)
+    {
+      console.log("Invalid Parent Provided.");
+      return;
+    }
 
-    // console.log(parsedElement);
+    let parsedElement;
+    try {
+      parsedElement = await JSON.parse(UTF8ToString(elementJson));
+    } catch {
+      console.log("Element failed to parse.");
+    }
 
-    // if(!parsedElement.tagName)
-    // {
-    //   console.log("Tag Specification Missing.");
-    // }
+    function generateElement(inputElement)
+    {
+      let atributeList;
+      try {
+        attributeList = Object.keys(inputElement);
+      } catch {
+        console.log("Element failed to parse correctly.");
+      }
 
-    // let element = document.createElement(parsedElement.tagName);
+      let element = document.createElement(inputElement.tagName);
+      for (let attribute = 0; attribute < attributeList.length; attribute++)
+      {
+        if (attributeList[attribute] != "tagName")
+        {
+          element[attributeList[attribute]] = inputElement[attributeList[attribute]];
+        }
+      }
 
-    // if(parsedElement.id)
-    // {
-    //   element.id = parsedElement.id;
-    // }
+      for (let child = 0 ; child < inputElement.children.length; child++)
+      {
+        if(!inputElement.children[child].tagName)
+        {
+          console.log("Children Tag Specification Missing.");
+        }
 
-    // if(parsedElement.childCount > 0)
-    // {
-    //   // for(int child = 0; child < parsedElement.childCount; child++)
-    //   // {
-    //   //   try
-    //   // }
-    // }
+        //console.log("Appending child");
+        element.appendChild(generateElement(inputElement.children[child]));        
+      }
+      //console.log("ELEMENT:", element);
+      return element;
+    }
 
-    // document.body.appendChild(element);
+    //console.log(parsedElement);
 
-    // if(child && parent)
-    // {
-    //   parent.appendChild(child);
-    // }
-    // else {
-    //   console.log("FRACTURE_APPEND_CHILD FAILED.");
-    // }
-    // return;
+    if(!parsedElement.tagName)
+    {
+      console.log("Tag Specification Missing.");
+    }
+
+    let renderedElement = generateElement(parsedElement);
+
+    parent.appendChild(renderedElement);
+
+    return;
+});
+
+EM_ASYNC_JS(void, FRACTURE_UPDATE_ELEMENT, (char* parentId, char* elementJson), {
+    let parent = document.getElementById(UTF8ToString(parentId));
+    if (parent == undefined)
+    {
+      console.log("Invalid Parent Provided.");
+      return;
+    }
+
+    let parsedElement;
+    try {
+      parsedElement = await JSON.parse(UTF8ToString(elementJson));
+    } catch {
+      console.log("Element failed to parse.");
+    }
+
+    function generateElement(inputElement)
+    {
+      let atributeList;
+      try {
+        attributeList = Object.keys(inputElement);
+      } catch {
+        console.log("Element failed to parse correctly.");
+      }
+
+      let element = parent;
+      for (let attribute = 0; attribute < attributeList.length; attribute++)
+      {
+        if (attributeList[attribute] != "tagName")
+        {
+          element[attributeList[attribute]] = inputElement[attributeList[attribute]];
+        }
+      }
+    }
+
+    generateElement(parsedElement);
+    return;
 });
 
 //Takes an Element JSON object, creates an HTML Element, appends it to the body Element.
@@ -115,22 +170,6 @@ EM_ASYNC_JS(void, FRACTURE_APPEND_BODY, (char *elementJson), {
 
     return;
 });
-
-// EM_JS(void, SET_INNER_HTML_BY_ID, (char* id, char* body), {
-//     document.getElementById(UTF8ToString(id)).innerHTML = UTF8ToString(body);
-//     return;
-// });
-//
-// EM_JS(void, SET_BODY_INNER_HTML, (char* body), {
-//     document.body.innerHTML = UTF8ToString(body);
-//     return;
-// });
-//
-// EM_JS(void, SET_HEAD_INNER_HTML, (char* body), {
-//     document.head.innerHTML = UTF8ToString(body);
-//     return;
-// });
-//
 
 //
 // void wc_render_page(char* pagePath)

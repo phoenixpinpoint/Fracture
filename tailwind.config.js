@@ -20,5 +20,9 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-  ],
+  ],  
+  safelist: [
+    'flex',
+    'flex-col',
+  ]
 }

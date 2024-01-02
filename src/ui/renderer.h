@@ -24,15 +24,13 @@ void FRACTURE_CREATE_ELEMENT(char* tag, char* id);
 
 void FRACTURE_APPEND_CHILD(char* id, char* elementId);
 
+void FRACTURE_UPDATE_ELEMENT(char* parentId, char* element);
+
 void FRACTURE_APPEND_BODY(char* element);
 
-// void SET_BODY_INNER_HTML(char* body);
-//
-// void SET_HEAD_INNER_HTML(char* body);
 //
 // void ADD_SCRIPT_TO_HEAD(char* script);
 //
-// void SET_INNER_HTML_BY_ID(char* id, char* body);
 //
 // void wc_write_document(char* page);
 //

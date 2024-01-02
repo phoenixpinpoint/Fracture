@@ -76,52 +76,28 @@ int main()
     //LOAD KORE
 
     //Client Side Rendering
-
     //==================
-    //Fracture Banner
-    // Div
-    FRACTURE_HTML_ELEMENT* banner = FRACTURE_CREATE_HTML_ELEMENT();//TODO Add f(x) to set Tag Name on Create
-    banner = FRACTURE_ADD_NEW_ATTRIBUTE(banner, "tagName", "div");
-    banner = FRACTURE_ADD_NEW_ATTRIBUTE(banner, "id", "banner");
-    banner = FRACTURE_ADD_NEW_ATTRIBUTE(banner, "className", "flex grid grid-cols-12");
+    // Load the homepage.
+    buffer_t* bodyHTML = bk_generate_webpage("../assets/pages/home.bk.html");
+    FRACTURE_HTML_ELEMENT* rawBody = FRACTURE_CREATE_HTML_ELEMENT();
+    rawBody = FRACTURE_ADD_NEW_ATTRIBUTE(rawBody, "tagName", "div");
+    rawBody = FRACTURE_ADD_NEW_ATTRIBUTE(rawBody, "className", "flex flex-col");
+    rawBody = FRACTURE_ADD_NEW_ATTRIBUTE(rawBody, "innerHTML", bodyHTML->data);
 
-    //BufferCol 
-    FRACTURE_HTML_ELEMENT* bufferCol = FRACTURE_CREATE_HTML_ELEMENT();
-    bufferCol = FRACTURE_ADD_NEW_ATTRIBUTE(bufferCol, "tagName", "div");
-    // bufferCol = FRACTURE_ADD_NEW_ATTRIBUTE(bufferCol, "innerHTML", "div");
-    bufferCol = FRACTURE_ADD_NEW_ATTRIBUTE(bufferCol, "className", "col-span-1");
-    
-    //Title
-    FRACTURE_HTML_ELEMENT* title = FRACTURE_CREATE_HTML_ELEMENT();
-    title = FRACTURE_ADD_NEW_ATTRIBUTE(title, "tagName", "p");
-    title = FRACTURE_ADD_NEW_ATTRIBUTE(title, "id", "bannerTitle");
-    title = FRACTURE_ADD_NEW_ATTRIBUTE(title, "className", "col-span-3");
-    title = FRACTURE_ADD_NEW_ATTRIBUTE(title, "innerHTML", "FRACTURE UI");
+    char* rawBodyJSON = FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(rawBody);
 
-    banner = FRACTURE_ADD_CHILD_ELEMENT(banner, bufferCol);
-    banner = FRACTURE_ADD_CHILD_ELEMENT(banner, title);
+    FRACTURE_APPEND_BODY(rawBodyJSON);
 
-    char* bannerJSON = FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(banner);
-    FRACTURE_APPEND_BODY(bannerJSON);
-    free(bannerJSON);
+    free(rawBodyJSON);
+    buffer_free(bodyHTML);
 
     //==================
     // Quote of the DAY
-    //Create Quote DIV
-    FRACTURE_HTML_ELEMENT* quoteDiv = FRACTURE_CREATE_HTML_ELEMENT();
-    quoteDiv = FRACTURE_ADD_NEW_ATTRIBUTE(quoteDiv, "tagName", "div");
-    quoteDiv = FRACTURE_ADD_NEW_ATTRIBUTE(quoteDiv, "id", "quoteDiv");
-
-    //Create our Quote Paragraph
+    // Create our element that is to be updated
     FRACTURE_HTML_ELEMENT* quoteElement = FRACTURE_CREATE_HTML_ELEMENT();
-    quoteElement = FRACTURE_ADD_NEW_ATTRIBUTE(quoteElement, "tagName", "p");
     quoteElement = FRACTURE_ADD_NEW_ATTRIBUTE(quoteElement, "innerHTML", quoteBuffer->data);
-
-    //Add Our Quote Paragraph to our Div
-    quoteDiv = FRACTURE_ADD_CHILD_ELEMENT(quoteDiv, quoteElement);
-
-    char* serailizedElement = FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(quoteDiv);
-    FRACTURE_APPEND_BODY(serailizedElement);
+    char* serailizedElement = FRACTURE_JSON_SERIALIZE_HTML_ELEMENT(quoteElement);
+    FRACTURE_UPDATE_ELEMENT("quote", serailizedElement);
 
     free(serailizedElement);
     buffer_free(quoteBuffer);
