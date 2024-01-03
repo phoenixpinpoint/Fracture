@@ -20,6 +20,6 @@
         "src/fracture.h",
         "install.sh",
         "package.json",
-        "tailwinds.config.js"
+        "tailwind.config.js"
     ]
   }
